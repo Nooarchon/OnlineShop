@@ -9,6 +9,10 @@ using OnlineShop.Services;
 using OnlineShop.Controllers;
 using System.Runtime.InteropServices;
 
+using Microsoft.AspNetCore.Mvc;
+using OnlineShop.Services;
+using OnlineShop.Models;
+
 namespace OnlineShop.Controllers
 {
     [ApiController]
@@ -17,7 +21,6 @@ namespace OnlineShop.Controllers
     {
         private readonly AuthService _authService;
 
-        // Visual Studio automataclly put AuthService from Program.cs
         public AuthController(AuthService authService)
         {
             _authService = authService;
@@ -35,12 +38,13 @@ namespace OnlineShop.Controllers
         public IActionResult Login([FromBody] UserAuthDto data)
         {
             var user = _authService.Login(data.Email, data.Password);
-            if (user == null) return Unauthorized(new { message = "Incorrect login or password" });
-            return Ok(new { email = user.Email });
+            if (user == null) return Unauthorized(new { message = "Invalid login or password" });
+
+            // Now the user ID is a Guid, which is always unique
+            return Ok(new { email = user.Email, id = user.Id });
         }
     }
 
-    //Helper class for receiving data from a website
     public class UserAuthDto
     {
         public string Email { get; set; } = "";

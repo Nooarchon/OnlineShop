@@ -25,3 +25,4 @@ C:\Users\julia\source\repos\OnlineShop\obj\Debug\net8.0\refint\OnlineShop.dll
 C:\Users\julia\source\repos\OnlineShop\obj\Debug\net8.0\OnlineShop.pdb
 C:\Users\julia\source\repos\OnlineShop\obj\Debug\net8.0\OnlineShop.genruntimeconfig.cache
 C:\Users\julia\source\repos\OnlineShop\obj\Debug\net8.0\ref\OnlineShop.dll
+C:\Users\julia\source\repos\OnlineShop\obj\Debug\net8.0\OnlineShop.sourcelink.json

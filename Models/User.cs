@@ -8,7 +8,7 @@ namespace OnlineShop.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid(); // Generated automatically
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }

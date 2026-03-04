@@ -16,6 +16,7 @@
             padding: 1rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .container {
@@ -51,6 +52,7 @@
             padding: 8px 15px;
             cursor: pointer;
             border-radius: 4px;
+            margin: 2px;
         }
 
         .modal {
@@ -63,13 +65,23 @@
             display: none;
             justify-content: center;
             align-items: center;
+            z-index: 1000;
         }
 
         .modal-content {
             background: #333;
             padding: 30px;
             border-radius: 10px;
-            width: 300px;
+            width: 400px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            background: #444;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -82,8 +94,9 @@
             <button class="btn" onclick="showModal('signup')">Sign Up</button>
         </div>
         <div id="user-info" style="display:none">
-            <span id="username"></span>
-            <button class="btn" onclick="logout()">Sign Out</button>
+            <span id="username" style="margin-right: 15px;"></span>
+            <button class="btn" onclick="showCart()" style="background: #28a745;">🛒 Cart (<span id="cart-count">0</span>)</button>
+            <button class="btn" onclick="logout()" style="background: #666;">Sign Out</button>
         </div>
     </nav>
 
@@ -97,101 +110,47 @@
                 <option value="Horror">Horror</option>
                 <option value="Action">Action</option>
                 <option value="Interactive Movie">Interactive Movie</option>
-                <option value="Stealth">Stealth</option>
-            </select>
-
-            <h4>Developer</h4>
-            <select id="dev-filter" onchange="loadProducts()">
-                <option value="">All developers</option>
-                <option value="Sandfall Interactive">Sandfall Interactive</option>
-                <option value="Rockstar Games">Rockstar Games</option>
-                <option value="Telltale Games">Telltale Games</option>
-                <option value="Quantic Dream">Quantic Dream</option>
-                <option value="Capcom">Capcom</option>
             </select>
         </aside>
 
-        <main class="catalog" id="product-list">
-        </main>
+        <main class="catalog" id="product-list"></main>
     </div>
 
     <div id="auth-modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-title">Login</h2>
-            <input type="email" id="email" placeholder="Email" style="width:100%; margin-bottom:10px;"><br>
-            <input type="password" id="password" placeholder="Password" style="width:100%; margin-bottom:10px;"><br>
+            <input type="email" id="email" placeholder="Email" style="width:95%; margin-bottom:10px; padding: 8px;"><br>
+            <input type="password" id="password" placeholder="Password" style="width:95%; margin-bottom:10px; padding: 8px;"><br>
             <button class="btn" onclick="handleAuth()">Send</button>
             <button class="btn" style="background:#666" onclick="hideModal()">Close</button>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content" style="width: 500px;">
+            <h2>Your Checkout</h2>
+            <div id="cart-items-list" style="margin-bottom: 20px; max-height: 300px; overflow-y: auto;"></div>
+            <div style="border-top: 1px solid #555; padding-top: 10px;">
+                <strong>Total: $<span id="cart-total">0</span></strong>
+            </div>
+            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                <button class="btn" style="background:#28a745" onclick="processPayment()">Pay Now</button>
+                <button class="btn" style="background:#666" onclick="hideCart()">Close</button>
+            </div>
         </div>
     </div>
 
     <script>
         let currentUser = null;
 
+        // --- INTERFACE ---
         function showModal(type) {
             document.getElementById('modal-title').innerText = type === 'login' ? 'Login' : 'Register';
-            // Save the action type in the button attribute so handleAuth knows what to do
             document.getElementById('auth-modal').dataset.type = type;
             document.getElementById('auth-modal').style.display = 'flex';
         }
-
         function hideModal() { document.getElementById('auth-modal').style.display = 'none'; }
-
-        async function loadProducts() {
-            // 1. Get values from both dropdowns
-            const genre = document.getElementById('genre-filter').value;
-            const dev = document.getElementById('dev-filter').value;
-
-            try {
-                // 2. Construct the URL with both parameters
-                const url = `/api/games?genre=${encodeURIComponent(genre)}&dev=${encodeURIComponent(dev)}`;
-
-                const response = await fetch(url);
-                const games = await response.json();
-
-                const list = document.getElementById('product-list');
-                list.innerHTML = games.map(g => `
-            <div class="game-card">
-                <h3>${g.name}</h3>
-                <p>Price: $${g.price}</p>
-                <button class="btn" onclick="addToCart(${g.id})">Add to cart</button>
-            </div>
-        `).join('');
-            } catch (err) {
-                console.error("Error loading products:", err);
-            }
-        }
-
-        async function handleAuth() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const type = document.getElementById('auth-modal').dataset.type; // login or signup
-
-            const endpoint = `/api/auth/${type}`;
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                currentUser = email;
-                updateUI();
-                hideModal();
-                alert(type === 'login' ? "Welcome back!" : "Registration successful!");
-            } else {
-                alert(result.message || "Authentication error");
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            updateUI();
-            alert("You are logged out");
-        }
+        function hideCart() { document.getElementById('cart-modal').style.display = 'none'; }
 
         function updateUI() {
             const authButtons = document.getElementById('auth-buttons');
@@ -202,23 +161,182 @@
                 authButtons.style.display = 'none';
                 userInfo.style.display = 'block';
                 usernameSpan.innerText = currentUser;
+                updateCartCount();
             } else {
                 authButtons.style.display = 'block';
                 userInfo.style.display = 'none';
             }
         }
 
-        async function addToCart(productId) {
-            if (!currentUser) {
-                alert("Log in to your account first!");
-                return;
-            }
-            alert("Product added! (We'll implement the cart logic with a 10-item limit next)");
+        // --- CATALOG ---
+        async function loadProducts() {
+            const genre = document.getElementById('genre-filter').value;
+            const params = new URLSearchParams();
+            if (genre) params.append('genres', genre);
+
+            const response = await fetch(`/api/games?${params.toString()}`);
+            const products = await response.json();
+            renderProducts(products);
         }
 
-        // Run on page load
+        function renderProducts(products) {
+            const list = document.getElementById('product-list');
+            list.innerHTML = products.map(g => `
+<div class="game-card">
+<h3>${g.name}</h3>
+<p>Price: $${g.price}</p>
+<button class="btn" onclick="addToCart('${g.id}')">Add to cart</button>
+</div>
+`).join('');
+        }
+
+        // --- AUTHORIZATION ---
+        async function handleAuth() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const type = document.getElementById('auth-modal').dataset.type;
+
+            try {
+                const response = await fetch(`/api/auth/${type}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (type === 'login') {
+                        // ВНИМАНИЕ: используем result.email (с маленькой буквы)
+                        currentUser = result.email;
+
+                        console.log("Logged in as:", currentUser);
+                        updateUI();
+                        hideModal();
+                        alert("Welcome, " + currentUser + "!");
+                    } else {
+                        alert("Registration successful! Now you can log in.");
+                        hideModal();
+                    }
+                } else {
+                    // Если сервер вернул ошибку (например, 401)
+                    alert(result.message || "Invalid email or password");
+                }
+            } catch (error) {
+                console.error("Auth error:", error);
+                alert("Connection error. Is the server running?");
+            }
+        }
+
+        // --- BASKET ---
+        async function addToCart(productId) {
+            if (!currentUser) { alert("Please log in first!"); return; }
+
+            const response = await fetch('/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userEmail: currentUser, productId: productId })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            updateCartCount();
+        }
+
+        async function updateCartCount() {
+            if (!currentUser) return;
+            const response = await fetch(`/api/cart/${currentUser}`);
+            const items = await response.json();
+            const count = items.reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        async function showCart() {
+            const response = await fetch(`/api/cart/${currentUser}`);
+            const items = await response.json();
+            renderCart(items);
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        function renderCart(items) {
+            const list = document.getElementById('cart-items-list');
+            let total = 0;
+
+            if (items.length === 0) {
+                list.innerHTML = "<p style='text-align:center'>Your cart is empty</p>";
+            } else {
+                list.innerHTML = items.map(item => {
+                    const sum = item.product.price * item.quantity;
+                    total += sum;
+                    return `
+                <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong>${item.product.name}</strong><br>
+                        <small>${item.quantity} x $${item.product.price}</small>
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <span style="margin-right:15px;">$${sum.toFixed(2)}</span>
+                        <button class="btn" style="background:#dc3545; padding:4px 8px;" 
+                                onclick="removeFromCart('${item.product.id}')">✕</button>
+                    </div>
+                </div>`;
+                }).join('');
+            }
+            document.getElementById('cart-total').innerText = total.toFixed(2);
+        }
+
+        // Add the deletion function itself to the frontend
+        async function removeFromCart(productId) {
+            const response = await fetch('/api/cart/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userEmail: currentUser, productId: productId })
+            });
+
+            if (response.ok) {
+                showCart(); // Redraw the list in the modal
+                updateCartCount(); // Update the number on the menu button
+            }
+        }
+
+        async function processPayment() {
+            if (!currentUser) return;
+
+            try {
+                // Send a request to delete items from the cart on the server
+                const response = await fetch(`/api/cart/clear/${currentUser}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+
+                    // 1. Show a success message
+                    alert("Payment successful! Your order has been placed.");
+
+                    // 2. Close the cart window
+                    hideCart();
+
+                    // 3. Reset the product counter in the menu (Cart (0))
+                    document.getElementById('cart-count').innerText = "0";
+
+                    // 4. Clear the visual list of products in the modal window
+                    document.getElementById('cart-items-list').innerHTML = "<p>Your cart is empty.</p>";
+                    document.getElementById('cart-total').innerText = "0.00";
+
+                    console.log("Order confirmed for:", currentUser);
+                } else {
+                    alert("Payment failed. Please try again.");
+                }
+            } catch (error) {
+                console.error("Payment error:", error);
+                alert("Server error during payment.");
+            }
+        }
+
+        function logout() { currentUser = null; updateUI(); }
+
         loadProducts();
     </script>
-
 </body>
 </html>

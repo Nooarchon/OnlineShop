@@ -22,9 +22,10 @@ namespace OnlineShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetGames([FromQuery] string? genre, [FromQuery] string? dev)
+        public IActionResult GetGames([FromQuery] string[]? genres, [FromQuery] string[]? devs)
         {
-            var games = _storeService.GetProducts(genre, dev);
+            // Use the updated method from StoreService
+            var games = _storeService.GetFacetProducts(genres, devs);
             return Ok(games);
         }
     }

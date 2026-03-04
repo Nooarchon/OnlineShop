@@ -5,22 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using OnlineShop.Models; // PLEASE ADD THIS LINE
 
+using OnlineShop.Models;
+
 namespace OnlineShop.Services
 {
     public class AuthService
     {
         private readonly List<User> _users = new();
-        private const int MaxUsers = 10;
 
         public string Register(string email, string password)
         {
-            if (_users.Count >= MaxUsers) return "Error: Limit 10 users";
+            if (_users.Any(u => u.Email == email))
+                return "Error: Email already registered";
 
-            // Simple password complexity validation
-            if (password.Length < 8) return "Error: Password must be at least 8 characters";
+            _users.Add(new User
+            {
+                Id = Guid.NewGuid(), // Secure unique ID
+                Email = email,
+                Password = password
+            });
 
-            _users.Add(new User { Id = _users.Count + 1, Email = email, Password = password });
-            return "Success";
+            return "Success: User registered";
         }
 
         public User? Login(string email, string password)

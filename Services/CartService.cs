@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OnlineShop.Models;
 
 namespace OnlineShop.Services
 {
     public class CartService
     {
-        // Dictionary: User's email -> List of items in their cart
+        // Dictionary: User's email -> List of items in the cart
         private readonly Dictionary<string, List<CartItem>> _userCarts = new();
 
         public string AddToCart(string email, Product product)
@@ -22,10 +20,7 @@ namespace OnlineShop.Services
 
             if (existingItem != null)
             {
-                // LIMIT CHECK: maximum 10 pieces of one product
-                if (existingItem.Quantity >= 10)
-                    return "Error: You cannot add more than 10 copies of the same game.";
-
+                // Just increase the quantity without checking
                 existingItem.Quantity++;
             }
             else
@@ -39,6 +34,27 @@ namespace OnlineShop.Services
         public List<CartItem> GetCart(string email)
         {
             return _userCarts.ContainsKey(email) ? _userCarts[email] : new List<CartItem>();
+        }
+
+        public void RemoveFromCart(string email, string productId)
+        {
+            if (_userCarts.ContainsKey(email))
+            {
+                var item = _userCarts[email].FirstOrDefault(i => i.Product.Id == productId);
+                if (item != null)
+                {
+                    _userCarts[email].Remove(item);
+                }
+            }
+        }
+
+        // Add a method to completely clear the cart after payment
+        public void ClearCart(string email)
+        {
+            if (_userCarts.ContainsKey(email))
+            {
+                _userCarts[email].Clear();
+            }
         }
     }
 

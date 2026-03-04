@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using OnlineShop.Models;
 
 namespace OnlineShop.Services;
+
 public class StoreService
 {
     private List<Product> _products = new();
 
     public StoreService()
     {
-        // Fill the catalog with your list
+        // Fill the catalog according to your specifications 
         AddGame("Clair Obscur", "RPG", "Sandfall Interactive");
         AddGame("Kingdom Come: Deliverance", "RPG", "Warhorse Studios");
         AddGame("Silent Hill", "Horror", "Konami");
@@ -21,7 +22,7 @@ public class StoreService
         AddGame("Dragon Age", "RPG", "BioWare");
         AddGame("GTA 5", "Action", "Rockstar Games");
         AddGame("Manhunt", "Stealth", "Rockstar Games");
-        AddGame("Little Nightmares", "Horror", "Tarsier Studios");
+        AddGame("Little Nightmares", "Horror/Quest", "Tarsier Studios");
         AddGame("Wolf Among Us", "Adventure", "Telltale Games");
         AddGame("Walking dead", "Adventure", "Telltale Games");
         AddGame("Dispatch", "Interactive Movie", "Adhoc studious");
@@ -42,21 +43,33 @@ public class StoreService
     {
         _products.Add(new Product
         {
-            Id = _products.Count + 1,
+            // USING Guid for uniqueness (instead of Count + 1)
+            Id = Guid.NewGuid().ToString(),
             Name = name,
             Price = 59.99m,
             Attributes = new() {
-                new ProductAttr("Genre", genre),
-                new ProductAttr("Developer", dev)
-            }
+new ProductAttr("Genre", genre),
+new ProductAttr("Developer", dev)
+}
         });
     }
 
-    public List<Product> GetProducts(string? genre = null, string? dev = null)
+    // FACETED FILTER: allows you to pass multiple values ​​at once
+    public List<Product> GetFacetProducts(string[]? genres = null, string[]? devs = null)
     {
         var query = _products.AsQueryable();
-        if (!string.IsNullOrEmpty(genre)) query = query.Where(p => p.Attributes.Any(a => a.Value == genre));
-        if (!string.IsNullOrEmpty(dev)) query = query.Where(p => p.Attributes.Any(a => a.Value == dev));
+
+        if (genres != null && genres.Length > 0)
+        {
+            // Find products with the "Genre" attribute value in the selected list
+            query = query.Where(p => p.Attributes.Any(a => a.Name == "Genre" && genres.Contains(a.Value)));
+        }
+
+        if (devs != null && devs.Length > 0)
+        {
+            query = query.Where(p => p.Attributes.Any(a => a.Name == "Developer" && devs.Contains(a.Value)));
+        }
+
         return query.ToList();
     }
 }
