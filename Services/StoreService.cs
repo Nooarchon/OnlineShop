@@ -56,8 +56,8 @@ public class StoreService
         //TVSeries
         AddProduct("TVSeries", "The Boys", 0.00m, "Satire", "Eric Kripke", "2019");
         AddProduct("TVSeries", "Supernatural", 0.00m, "Fantasy", "Eric Kripke", "2005");
-        AddProduct("TVSeries", "Orphan Black", 0.00m, "Science-fiction", "Graeme Manson", "2013");
-        AddProduct("TVSeries", "Dark", 0.00m, "Science-fiction", "Baran bo Odar and Jantje Friese", "2017");
+        AddProduct("TVSeries", "Orphan Black", 0.00m, "Sci-Fi", "Graeme Manson", "2013");
+        AddProduct("TVSeries", "Dark", 0.00m, "Sci-Fi", "Baran bo Odar and Jantje Friese", "2017");
 
 
         // --- МУЗЫКА ---

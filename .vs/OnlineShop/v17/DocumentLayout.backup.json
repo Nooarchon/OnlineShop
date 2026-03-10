@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\julia\\source\\repos\\OnlineShop\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
@@ -42,8 +42,7 @@
               "RelativeToolTip": "Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T08:46:17.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T08:46:17.74Z"
             },
             {
               "$type": "Document",
@@ -55,30 +54,29 @@
               "RelativeToolTip": "Controllers\\CartController.cs",
               "ViewState": "AgIAAB4AAAAAAAAAAAAqwEEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:12:30.546Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T20:12:30.546Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "StoreService.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs",
               "RelativeDocumentMoniker": "Services\\StoreService.cs",
-              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs",
-              "RelativeToolTip": "Services\\StoreService.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAYwEoAAAAeAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs*",
+              "RelativeToolTip": "Services\\StoreService.cs*",
+              "ViewState": "AgIAACMAAAAAAAAAAAAQwDMAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-10T08:39:01.937Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "index.html",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
               "RelativeDocumentMoniker": "wwwroot\\index.html",
-              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html*",
-              "RelativeToolTip": "wwwroot\\index.html*",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
+              "RelativeToolTip": "wwwroot\\index.html",
               "ViewState": "AgIAABsBAAAAAAAAAAAAwBwBAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2026-03-04T16:58:49.436Z",
@@ -94,8 +92,7 @@
               "RelativeToolTip": "Models\\Product.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:02:41.279Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-04T20:02:41.279Z"
             }
           ]
         }
