@@ -19,14 +19,20 @@ namespace OnlineShop.Controllers
         [HttpPost("add")]
         public IActionResult Add([FromBody] AddToCartDto data)
         {
-            // Search for a game by string ID (Guid) 
-            var product = _storeService.GetFacetProducts().FirstOrDefault(p => p.Id == data.ProductId);
+            // 1. Ищем товар, передавая null во все фильтры, чтобы получить полный список
+            var product = _storeService.GetFacetProducts(null, null, null)
+                                       .FirstOrDefault(p => p.Id == data.ProductId);
 
-            if (product == null) return NotFound(new { message = "Game not found" });
+            if (product == null)
+                return NotFound(new { message = "Product not found" });
 
+            // 2. Добавляем в корзину и получаем результат
             var result = _cartService.AddToCart(data.UserEmail, product);
 
-            if (result.StartsWith("Error")) return BadRequest(new { message = result });
+            // 3. Проверяем на ошибки (например, лимит в 10 товаров)
+            if (result.StartsWith("Error"))
+                return BadRequest(new { message = result });
+
             return Ok(new { message = result });
         }
 
@@ -55,6 +61,6 @@ namespace OnlineShop.Controllers
     public class AddToCartDto
     {
         public string UserEmail { get; set; } = "";
-        public string ProductId { get; set; } = ""; // Must be string! 
+        public string ProductId { get; set; } = "";
     }
 }

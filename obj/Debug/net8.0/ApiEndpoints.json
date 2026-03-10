@@ -97,19 +97,29 @@
   },
   {
     "ContainingType": "OnlineShop.Controllers.GameController",
-    "Method": "GetGames",
+    "Method": "GetProducts",
     "RelativePath": "api/games",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
+        "Name": "category",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "genres",
         "Type": "System.String[]",
         "IsRequired": false
       },
       {
-        "Name": "devs",
+        "Name": "creators",
+        "Type": "System.String[]",
+        "IsRequired": false
+      },
+      {
+        "Name": "years",
         "Type": "System.String[]",
         "IsRequired": false
       }

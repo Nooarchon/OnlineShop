@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Services;
-using OnlineShop.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +21,15 @@ namespace OnlineShop.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetGames([FromQuery] string[]? genres, [FromQuery] string[]? devs)
+        public IActionResult GetProducts(
+            [FromQuery] string? category,
+            [FromQuery] string[]? genres,
+            [FromQuery] string[]? creators,
+            [FromQuery] string[]? years)
         {
-            // Use the updated method from StoreService
-            var games = _storeService.GetFacetProducts(genres, devs);
-            return Ok(games);
+            // Исправлено имя метода на GetFacetProducts (как в твоем StoreService)
+            var products = _storeService.GetFacetProducts(category, genres, creators, years);
+            return Ok(products);
         }
     }
 }
