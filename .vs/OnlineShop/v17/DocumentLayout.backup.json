@@ -11,16 +11,12 @@
       "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:controllers\\cartcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,27 +30,29 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\User.cs",
-              "RelativeToolTip": "Models\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "GameController.cs",
+              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\GameController.cs",
+              "RelativeDocumentMoniker": "Controllers\\GameController.cs",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\GameController.cs",
+              "RelativeToolTip": "Controllers\\GameController.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAUwCsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T08:46:17.74Z"
+              "WhenOpened": "2026-03-12T11:54:57.854Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "CartController.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\CartController.cs",
               "RelativeDocumentMoniker": "Controllers\\CartController.cs",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\CartController.cs",
               "RelativeToolTip": "Controllers\\CartController.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAqwEEAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAA3wEEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:12:30.546Z"
+              "WhenOpened": "2026-03-12T11:54:23.051Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -64,9 +62,9 @@
               "RelativeDocumentMoniker": "Services\\StoreService.cs",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs*",
               "RelativeToolTip": "Services\\StoreService.cs*",
-              "ViewState": "AgIAACMAAAAAAAAAAAAQwDMAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-10T08:39:01.937Z",
+              "WhenOpened": "2026-03-12T11:52:31.262Z",
               "EditorCaption": ""
             },
             {
@@ -77,22 +75,10 @@
               "RelativeDocumentMoniker": "wwwroot\\index.html",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
               "RelativeToolTip": "wwwroot\\index.html",
-              "ViewState": "AgIAABsBAAAAAAAAAAAAwBwBAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAOAAAAAAAAAAAAAAwPMAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2026-03-04T16:58:49.436Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Product.cs",
-              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\Product.cs",
-              "RelativeDocumentMoniker": "Models\\Product.cs",
-              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\Product.cs",
-              "RelativeToolTip": "Models\\Product.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T20:02:41.279Z"
             }
           ]
         }

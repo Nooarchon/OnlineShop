@@ -17,9 +17,7 @@ public class StoreService
         AddProduct("Games", "Clair Obscur", 59.99m, "RPG", "Sandfall Interactive", "2025");
         AddProduct("Games", "Silent Hill 2", 69.99m, "Horror", "Bloober Team", "2024");
         AddProduct("Games", "GTA 5", 29.99m, "Action", "Rockstar Games", "2013");
-
         AddProduct("Games", "Kingdom Come: Deliverance", 69.99m, "RPG", "Warhorse Studios", "2018");
-
         AddProduct("Games", "Resident Evil", 29.99m, "Horror", "Capcom", "1996");
         AddProduct("Games", "Disco Elysium", 59.99m, "RPG", "ZA/UM", "2019");
         AddProduct("Games", "Dragon Age", 29.99m, "RPG", "BioWare", "2009");
@@ -51,17 +49,17 @@ public class StoreService
 
         // --- ФИЛЬМЫ / СЕРИАЛЫ ---
         AddProduct("Movies", "Inception", 12.99m, "Sci-Fi", "Christopher Nolan", "2010");
-        AddProduct("Movies", "Requim for dream", 0.00m, "Drama", "Darren Arnofsky", "2001");
+        AddProduct("Movies", "Requim for dream", 10.00m, "Drama", "Darren Arnofsky", "2001");
 
         //TVSeries
-        AddProduct("TVSeries", "The Boys", 0.00m, "Satire", "Eric Kripke", "2019");
-        AddProduct("TVSeries", "Supernatural", 0.00m, "Fantasy", "Eric Kripke", "2005");
-        AddProduct("TVSeries", "Orphan Black", 0.00m, "Sci-Fi", "Graeme Manson", "2013");
-        AddProduct("TVSeries", "Dark", 0.00m, "Sci-Fi", "Baran bo Odar and Jantje Friese", "2017");
+        AddProduct("TVSeries", "The Boys", 50.00m, "Satire", "Eric Kripke", "2019");
+        AddProduct("TVSeries", "Supernatural", 80.00m, "Fantasy", "Eric Kripke", "2005");
+        AddProduct("TVSeries", "Orphan Black", 30.00m, "Sci-Fi", "Graeme Manson", "2013");
+        AddProduct("TVSeries", "Dark", 20.00m, "Sci-Fi", "Baran bo Odar and Jantje Friese", "2017");
 
 
         // --- МУЗЫКА ---
-        AddProduct("Music", "Rammstein", 25.00m, "Neue Deutsche Härte", "Mutter", "2001");
+        AddProduct("Music", "Mutter", 25.00m, "Neue Deutsche Härte", "Rammstein", "2001");
     }
 
     private void AddProduct(string category, string name, decimal price, string genre, string creator, string year)
@@ -72,16 +70,32 @@ public class StoreService
             Name = name,
             Category = category,
             Price = price,
+            Description = $"Experience {name}, a premier title in the {genre} genre.", // Added description
+            Reviews = new List<Review>(), // CRITICAL: Initialize this so the list isn't null!
             Attributes = new()
             {
                 new ProductAttr("Genre", genre),
-                new ProductAttr("Creator", creator), // Для игр - Dev, для книг - Автор
+                new ProductAttr("Creator", creator),
                 new ProductAttr("Year", year)
             }
         });
     }
 
-    // StoreService.cs
+    public bool AddReview(string productId, string email, string comment, int rating)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (product == null) return false;
+
+        product.Reviews.Add(new Review
+        {
+            User = email,
+            Comment = comment,
+            Rating = Math.Clamp(rating, 1, 5),
+            Date = DateTime.Now
+        });
+        return true;
+    }
+
     public List<Product> GetFacetProducts(
         string? category = null,
         string[]? genres = null,
@@ -96,8 +110,10 @@ public class StoreService
         if (genres != null && genres.Length > 0)
             query = query.Where(p => p.Attributes.Any(a => a.Name == "Genre" && genres.Contains(a.Value)));
 
+        // FIXED: Corrected the creator filter logic
         if (creators != null && creators.Length > 0)
-            query = query.Where(p => p.Attributes.Any(a => a.Name == "Creator" || a.Name == "Developer" && creators.Contains(a.Value)));
+            query = query.Where(p => p.Attributes.Any(a =>
+                (a.Name == "Creator" || a.Name == "Developer") && creators.Contains(a.Value)));
 
         if (years != null && years.Length > 0)
             query = query.Where(p => p.Attributes.Any(a => a.Name == "Year" && years.Contains(a.Value)));

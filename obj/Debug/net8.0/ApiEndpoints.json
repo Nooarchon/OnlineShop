@@ -83,7 +83,7 @@
     "ContainingType": "OnlineShop.Controllers.CartController",
     "Method": "Remove",
     "RelativePath": "api/cart/remove",
-    "HttpMethod": "POST",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -122,6 +122,38 @@
         "Name": "years",
         "Type": "System.String[]",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnlineShop.Controllers.GameController",
+    "Method": "GetProduct",
+    "RelativePath": "api/products/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnlineShop.Controllers.GameController",
+    "Method": "AddReview",
+    "RelativePath": "api/products/review",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "OnlineShop.Controllers.ReviewDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

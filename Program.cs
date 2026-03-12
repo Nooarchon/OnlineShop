@@ -2,11 +2,18 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register Services
-builder.Services.AddControllers();
+// Register Services with JSON formatting fix
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // This keeps property names exactly as they are in C# (e.g., "Id", "Name")
+        // making them easy to match in your JavaScript code.
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<StoreService>();
-builder.Services.AddSingleton<CartService>(); // Add Busket
+builder.Services.AddSingleton<CartService>();
 
 var app = builder.Build();
 

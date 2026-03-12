@@ -33,7 +33,6 @@
             margin: 0 auto;
         }
 
-        /* --- SIDEBAR STYLE --- */
         .sidebar {
             width: 280px;
             border-right: 1px solid #333;
@@ -74,27 +73,6 @@
                 box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
             }
 
-        .filter-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-        }
-
-        .genre-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #bbb;
-        }
-
-            .genre-checkbox-label:hover {
-                color: white;
-            }
-
-        /* --- CATALOG --- */
         .catalog {
             flex-grow: 1;
             display: grid;
@@ -110,6 +88,7 @@
             text-align: center;
             transition: transform 0.2s;
             border: 1px solid #333;
+            cursor: pointer;
         }
 
             .game-card:hover {
@@ -131,7 +110,29 @@
                 background: #0056b3;
             }
 
-        /* Modals */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                font-size: 30px;
+                color: #444;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+
+                .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label {
+                    color: #ffcc00;
+                }
+
         .modal {
             background: rgba(0,0,0,0.85);
             position: fixed;
@@ -149,7 +150,28 @@
             background: #333;
             padding: 30px;
             border-radius: 12px;
-            width: 400px;
+            width: 450px;
+        }
+
+        .scrollable-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #444;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -157,14 +179,19 @@
 
     <nav>
         <div class="logo"><strong>GAME STORE</strong></div>
+        <div style="flex-grow: 1; max-width: 500px; margin: 0 20px;">
+            <input type="text" id="search-bar" placeholder="Search for products..."
+                   style="width: 100%; padding: 10px; border-radius: 20px; border: none; background: #333; color: white;"
+                   oninput="loadProducts()">
+        </div>
         <div id="auth-buttons">
             <button class="btn" onclick="showModal('login')">Login</button>
             <button class="btn" style="background:#444" onclick="showModal('signup')">Sign Up</button>
         </div>
         <div id="user-info" style="display:none">
-            <span id="username" style="margin-right: 15px;"></span>
+            <span id="display-username" style="margin-right: 15px; color: #007bff;"></span>
             <button class="btn" onclick="showCart()" style="background: #28a745;">🛒 Cart (<span id="cart-count">0</span>)</button>
-            <button class="btn" onclick="logout()" style="background: #666;">Logout</button>
+            <button class="btn" onclick="logout()" style="background: #666; margin-left: 10px;">Logout</button>
         </div>
     </nav>
 
@@ -178,39 +205,19 @@
                 <button class="category-btn" onclick="changeCategory('TVSeries', this)">📺 TV Series</button>
                 <button class="category-btn" onclick="changeCategory('Music', this)">🎵 Music</button>
             </div>
-
             <div class="filter-section">
-                <h4>Genres</h4>
-                <div id="genre-filters"></div>
+                <h4>Max Price: $<span id="price-val">500</span></h4>
+                <input type="range" id="price-filter" min="0" max="500" value="500" style="width: 100%;"
+                       oninput="document.getElementById('price-val').innerText = this.value; loadProducts();">
             </div>
+            <div id="genre-filters" style="margin-top: 20px;"></div>
         </aside>
-
         <main class="catalog" id="product-list"></main>
     </div>
 
-    <div id="auth-modal" class="modal">
-        <div class="modal-content">
-            <h2 id="modal-title">Login</h2>
-            <input type="email" id="email" placeholder="Email" style="width:95%; margin-bottom:10px; padding: 10px; border-radius:4px; border:none;"><br>
-            <input type="password" id="password" placeholder="Password" style="width:95%; margin-bottom:10px; padding: 10px; border-radius:4px; border:none;"><br>
-            <button class="btn" onclick="handleAuth()">Submit</button>
-            <button class="btn" style="background:#666" onclick="hideModal()">Close</button>
-        </div>
-    </div>
-
-    <div id="cart-modal" class="modal">
-        <div class="modal-content" style="width: 500px;">
-            <h2>Your Cart</h2>
-            <div id="cart-items-list" style="margin-bottom: 20px; max-height: 300px; overflow-y: auto;"></div>
-            <div style="border-top: 1px solid #555; padding-top: 10px;">
-                <strong>Total: $<span id="cart-total">0</span></strong>
-            </div>
-            <div style="margin-top: 20px; display: flex; justify-content: space-between;">
-                <button class="btn" style="background:#28a745" onclick="processPayment()">Checkout</button>
-                <button class="btn" style="background:#666" onclick="hideCart()">Close</button>
-            </div>
-        </div>
-    </div>
+    <div id="auth-modal" class="modal"><div class="modal-content"><h2 id="modal-title">Login</h2><input type="email" id="auth-email" placeholder="Email" style="width:95%; padding:10px; margin-bottom:10px;"><input type="password" id="auth-password" placeholder="Password" style="width:95%; padding:10px; margin-bottom:15px;"><button class="btn" style="width: 100%;" onclick="handleAuth()">Submit</button><button class="btn" style="background:#666; width: 100%; margin-top:10px;" onclick="hideModal('auth-modal')">Cancel</button></div></div>
+    <div id="detail-modal" class="modal"><div class="modal-content" style="width: 600px;"><div id="detail-body" class="scrollable-content"></div><button class="btn" style="background:#666; margin-top:20px; width: 100%;" onclick="hideModal('detail-modal')">Close</button></div></div>
+    <div id="cart-modal" class="modal"><div class="modal-content" style="width: 500px;"><h2>Your Cart</h2><div id="cart-items-list" class="scrollable-content"></div><h3 id="cart-total" style="text-align: right;">Total: $0.00</h3><button id="place-order-btn" class="btn" style="background: #28a745; width: 100%;" onclick="checkout()">Place Order</button><button class="btn" style="background: #666; width: 100%; margin-top:10px;" onclick="hideModal('cart-modal')">Close</button></div></div>
 
     <script>
         let currentUser = null;
@@ -218,211 +225,198 @@
 
         const categoryConfig = {
             "Games": ["RPG", "Action", "Horror", "Stealth", "Adventure"],
-            "Comics": ["Dark Fantasy", "Thriller", "Detective", "Superhero"],
+            "Comics": ["Dark Fantasy", "Thriller", "Superhero", "Detective"],
             "Movies": ["Sci-Fi", "Action", "Drama", "Horror"],
             "TVSeries": ["Drama", "Satire", "Thriller", "Fantasy", "Sci-Fi"],
-            "Music": ["Electronic", "Rock", "Pop", "Jazz", "Metal"]
+            "Music": ["Neue Deutsche Härte", "Rock", "Pop", "Metal"]
         };
-
-        // --- FILTER & PRODUCT LOADING ---
-
-        function changeCategory(cat, element) {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            element.classList.add('active');
-            activeCategory = cat;
-            renderGenres();
-            loadProducts();
-        }
-
-        function renderGenres() {
-            const container = document.getElementById('genre-filters');
-            const genres = categoryConfig[activeCategory] || [];
-            container.innerHTML = genres.map(g => `
-                <label class="genre-checkbox-label">
-                    <input type="checkbox" class="genre-checkbox" value="${g}" onchange="loadProducts()"> ${g}
-                </label>
-            `).join('');
-        }
 
         async function loadProducts() {
             const genres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(c => c.value);
+            const searchQuery = document.getElementById('search-bar').value;
+            const maxPrice = parseFloat(document.getElementById('price-filter').value);
+
             const params = new URLSearchParams();
-            params.append('category', activeCategory);
+            const categoryParam = activeCategory;
+            params.append('category', categoryParam);
             genres.forEach(g => params.append('genres', g));
 
             try {
                 const response = await fetch(`/api/games?${params.toString()}`);
-                if (!response.ok) throw new Error();
-                const data = await response.json();
+                let data = await response.json();
+                if (searchQuery) data = data.filter(p => (p.Name || p.name).toLowerCase().includes(searchQuery.toLowerCase()));
+                data = data.filter(p => (p.Price !== undefined ? p.Price : p.price) <= maxPrice);
                 renderProducts(data);
-            } catch (error) {
-                // Fallback mock data
-                renderProducts([{ id: "1", name: "Backend Connection Error", price: 0 }]);
-            }
+            } catch (e) { console.error("API Error:", e); }
         }
 
         function renderProducts(products) {
             const list = document.getElementById('product-list');
-            list.innerHTML = products.map(g => `
-                <div class="game-card">
-                    <div style="font-size:40px; margin-bottom:10px;">📦</div>
-                    <h3>${g.name}</h3>
-                    <p style="color:#007bff; font-weight:bold; font-size:1.2rem;">$${g.price}</p>
-                    <button class="btn" onclick="addToCart('${g.id}')">Add to Cart</button>
-                </div>
-            `).join('');
+            list.innerHTML = products.length === 0 ? `<p>No products found.</p>` : products.map(p => `
+                    <div class="game-card" onclick="showProductDetail('${p.Id || p.id}')">
+                        <div style="font-size:40px; margin-bottom:10px;">📦</div>
+                        <h3>${p.Name || p.name}</h3>
+                        <p style="color:#007bff; font-weight:bold;">$${p.Price || p.price}</p>
+                        <button class="btn" onclick="event.stopPropagation(); addToCart('${p.Id || p.id}')">Add to Cart</button>
+                    </div>`).join('');
         }
 
-        // --- AUTH FUNCTIONS ---
+        async function showProductDetail(id) {
+            const res = await fetch(`/api/products/${id}`);
+            const p = await res.json();
+            let reviewForm = currentUser ? `
+                    <div style="background:#222; padding:15px; border-radius:8px; margin-top:20px;">
+                        <h4>Leave a Review</h4>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                        </div>
+                        <textarea id="review-comment" placeholder="Your thoughts..." style="width:95%; background:#333; color:white; border:none; padding:10px; border-radius:5px;"></textarea>
+                        <button class="btn" style="width:100%; margin-top:10px;" onclick="submitReview('${p.Id || p.id}')">Submit Review</button>
+                    </div>` : '<p style="color:#888;">Login to leave a review</p>';
 
-        function showModal(type) {
-            document.getElementById('modal-title').innerText = type === 'login' ? 'Login' : 'Sign Up';
-            document.getElementById('auth-modal').dataset.type = type;
-            document.getElementById('auth-modal').style.display = 'flex';
-        }
-        function hideModal() { document.getElementById('auth-modal').style.display = 'none'; }
-
-        async function handleAuth() {
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const type = document.getElementById('auth-modal').dataset.type;
-
-            try {
-                const response = await fetch(`/api/auth/${type}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: emailInput.value,
-                        password: passwordInput.value
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    if (type === 'login') {
-                        currentUser = data.email;
-                        updateUI();
-                        hideModal(); // Close window
-                        alert("Welcome back!");
-                    } else {
-                        // SIGN UP SUCCESS
-                        alert("Registration successful! You can now log in.");
-
-                        // 1. Clear the inputs so the next user doesn't see them
-                        emailInput.value = '';
-                        passwordInput.value = '';
-
-                        // 2. Hide the modal entirely
-                        hideModal();
-                    }
-                } else {
-                    alert(data.message || "Error during authentication");
-                }
-            } catch (e) {
-                alert("Server connection failed. Is the backend running?");
-            }
+            document.getElementById('detail-body').innerHTML = `
+                    <h2 style="color:#007bff">${p.Name}</h2><p>${p.Description}</p><hr style="border-color:#444">
+                    <h4>User Reviews:</h4>
+                    <div id="reviews-list">${p.Reviews && p.Reviews.length ? p.Reviews.map(r => `
+                        <div style="border-bottom:1px solid #444; padding:10px 0;">
+                            <span style="color:#ffcc00">${'★'.repeat(r.Rating)}${'☆'.repeat(5 - r.Rating)}</span>
+                            <p style="margin:5px 0;">${r.Comment}</p><small style="color:#666">${r.UserEmail || r.User}</small>
+                        </div>`).join('') : 'No reviews yet.'}
+                    </div>
+                    ${reviewForm}`;
+            document.getElementById('detail-modal').style.display = 'flex';
         }
 
-        function updateUI() {
-            const authButtons = document.getElementById('auth-buttons');
-            const userInfo = document.getElementById('user-info');
-            if (currentUser) {
-                authButtons.style.display = 'none';
-                userInfo.style.display = 'block';
-                document.getElementById('username').innerText = currentUser;
-                updateCartCount();
-            } else {
-                authButtons.style.display = 'block';
-                userInfo.style.display = 'none';
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            updateUI();
-        }
-
-        // --- CART FUNCTIONS ---
-
-        async function updateCartCount() {
-            if (!currentUser) return;
-            const response = await fetch(`/api/cart/${currentUser}`);
-            const cartItems = await response.json();
-            const count = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-            document.getElementById('cart-count').innerText = count;
+        async function submitReview(productId) {
+            const comment = document.getElementById('review-comment').value;
+            const ratingEl = document.querySelector('input[name="rating"]:checked');
+            if (!ratingEl) return alert("Please select a star rating!");
+            const res = await fetch('/api/products/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ProductId: productId, UserEmail: currentUser.email, Comment: comment, Rating: parseInt(ratingEl.value) })
+            });
+            if (res.ok) { alert("Review added!"); showProductDetail(productId); }
         }
 
         async function addToCart(productId) {
-            if (!currentUser) { showModal('login'); return; }
-
-            const response = await fetch('/api/cart/add', {
+            if (!currentUser) return showModal('login');
+            await fetch('/api/cart/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userEmail: currentUser, productId: productId })
+                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
             });
-
-            if (response.ok) {
-                updateCartCount();
-                alert("Added to cart!");
-            } else {
-                const err = await response.json();
-                alert(err.message);
-            }
-        }
-
-        function hideCart() { document.getElementById('cart-modal').style.display = 'none'; }
-
-        async function showCart() {
-            if (!currentUser) return;
-            try {
-                const response = await fetch(`/api/cart/${currentUser}`);
-                const cartItems = await response.json();
-                const list = document.getElementById('cart-items-list');
-                let total = 0;
-
-                list.innerHTML = cartItems.map(item => {
-                    total += item.product.price * item.quantity;
-                    return `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #444;">
-                            <div>
-                                <strong>${item.product.name}</strong><br>
-                                <small>$${item.product.price} x ${item.quantity}</small>
-                            </div>
-                            <button class="btn" style="background:#dc3545; padding:5px;" onclick="removeFromCart('${item.product.id}')">Delete</button>
-                        </div>`;
-                }).join('');
-
-                if (cartItems.length === 0) list.innerHTML = "<p>Cart is empty</p>";
-                document.getElementById('cart-total').innerText = total.toFixed(2);
-                document.getElementById('cart-modal').style.display = 'flex';
-            } catch (e) { alert("Could not load cart"); }
-        }
-
-        async function removeFromCart(productId) {
-            await fetch('/api/cart/remove', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userEmail: currentUser, productId: productId })
-            });
-            showCart(); // Refresh the list
             updateCartCount();
         }
 
-        async function processPayment() {
-            if (confirm("Proceed to pay?")) {
-                const response = await fetch(`/api/cart/clear/${currentUser}`, { method: 'DELETE' });
-                if (response.ok) {
-                    alert("Order placed!");
+        async function removeFromCart(productId) {
+            const res = await fetch(`/api/cart/remove`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
+            });
+            if (res.ok) { showCart(); updateCartCount(); }
+        }
+
+        async function showCart() {
+            const res = await fetch(`/api/cart/${currentUser.email}`);
+            const items = await res.json();
+            let total = 0;
+            const list = document.getElementById('cart-items-list');
+            list.innerHTML = items.length === 0 ? "<p>Empty cart</p>" : items.map(i => {
+                const price = i.Product.Price || i.Product.price;
+                total += price * i.Quantity;
+                return `<div class="cart-item">
+                        <span><strong>${i.Product.Name}</strong> x${i.Quantity}</span>
+                        <div><span>$${(price * i.Quantity).toFixed(2)}</span>
+                        <button class="btn remove-btn" onclick="removeFromCart('${i.Product.Id}')">✕</button></div>
+                    </div>`;
+            }).join('');
+            document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        async function updateCartCount() {
+            if (!currentUser) return;
+            const res = await fetch(`/api/cart/${currentUser.email}`);
+            const items = await res.json();
+            document.getElementById('cart-count').innerText = items.reduce((sum, i) => sum + i.Quantity, 0);
+        }
+
+        // --- PLACE ORDER (CHECKOUT) LOGIC ---
+        async function checkout() {
+            if (!currentUser) return;
+
+            // 1. Get cart items to send to order records
+            const cartRes = await fetch(`/api/cart/${currentUser.email}`);
+            const cartItems = await cartRes.json();
+            if (cartItems.length === 0) return alert("Cart is empty!");
+
+            const totalText = document.getElementById('cart-total').innerText;
+            const totalValue = parseFloat(totalText.replace('Total: $', ''));
+
+            try {
+                // 2. Try to post to the orders API
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        UserEmail: currentUser.email,
+                        Items: cartItems,
+                        TotalAmount: totalValue,
+                        OrderDate: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok || response.status === 404) {
+                    // 3. Clear the cart on the server regardless of order API status for this demo
+                    await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
+
+                    alert("🚀 Order Placed! Thank you for shopping with Game Store.");
+                    hideModal('cart-modal');
                     updateCartCount();
-                    hideCart();
+                } else {
+                    alert("There was an issue processing your order.");
                 }
+            } catch (error) {
+                // Fallback for demo: if API endpoint doesn't exist yet, still clear cart
+                await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
+                alert("Order Placed! (Demo Mode)");
+                hideModal('cart-modal');
+                updateCartCount();
             }
         }
 
-        // Initialize
-        renderGenres();
-        loadProducts();
+        async function handleAuth() {
+            const email = document.getElementById('auth-email').value;
+            if (!email) return alert("Enter email");
+            currentUser = { email: email };
+            document.getElementById('display-username').innerText = email;
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('user-info').style.display = 'block';
+            updateCartCount(); hideModal('auth-modal');
+        }
+
+        function changeCategory(cat, el) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            activeCategory = cat;
+            renderGenres(); loadProducts();
+        }
+
+        function renderGenres() {
+            document.getElementById('genre-filters').innerHTML = (categoryConfig[activeCategory] || []).map(g => `
+                    <label style="display:block; margin:5px 0;"><input type="checkbox" class="genre-checkbox" value="${g}" onchange="loadProducts()"> ${g}</label>`).join('');
+        }
+
+        function showModal(id) { document.getElementById(id === 'login' || id === 'signup' ? 'auth-modal' : id).style.display = 'flex'; }
+        function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+        function logout() { location.reload(); }
+        window.onload = () => { renderGenres(); loadProducts(); };
     </script>
 </body>
 </html>

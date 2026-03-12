@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Services;
+using OnlineShop.Models;
 
 namespace OnlineShop.Controllers
 {
@@ -19,17 +20,15 @@ namespace OnlineShop.Controllers
         [HttpPost("add")]
         public IActionResult Add([FromBody] AddToCartDto data)
         {
-            // 1. Ищем товар, передавая null во все фильтры, чтобы получить полный список
-            var product = _storeService.GetFacetProducts(null, null, null)
+            // Fix: Pass 4 nulls to match the StoreService.GetFacetProducts signature
+            var product = _storeService.GetFacetProducts(null, null, null, null)
                                        .FirstOrDefault(p => p.Id == data.ProductId);
 
             if (product == null)
                 return NotFound(new { message = "Product not found" });
 
-            // 2. Добавляем в корзину и получаем результат
             var result = _cartService.AddToCart(data.UserEmail, product);
 
-            // 3. Проверяем на ошибки (например, лимит в 10 товаров)
             if (result.StartsWith("Error"))
                 return BadRequest(new { message = result });
 
@@ -43,7 +42,8 @@ namespace OnlineShop.Controllers
             return Ok(cart);
         }
 
-        [HttpPost("remove")]
+        // FIX: Changed from HttpPost to HttpDelete to match the frontend fetch method
+        [HttpDelete("remove")]
         public IActionResult Remove([FromBody] AddToCartDto data)
         {
             _cartService.RemoveFromCart(data.UserEmail, data.ProductId);
