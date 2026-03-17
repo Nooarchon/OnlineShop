@@ -13,7 +13,7 @@ public class StoreService
 
     public StoreService()
     {
-        // --- ИГРЫ ---
+        // --- GAMES ---
         AddProduct("Games", "Clair Obscur", 59.99m, "RPG", "Sandfall Interactive", "2025");
         AddProduct("Games", "Silent Hill 2", 69.99m, "Horror", "Bloober Team", "2024");
         AddProduct("Games", "GTA 5", 29.99m, "Action", "Rockstar Games", "2013");
@@ -39,7 +39,7 @@ public class StoreService
         AddProduct("Games", "Mafia", 49.99m, "Action", "2K Czech", "2002");
 
 
-        // --- МАНГА / КОМИКСЫ ---
+        // --- MANGA / COMICS ---
         AddProduct("Comics", "Berserk Vol. 1", 14.99m, "Dark Fantasy", "Kentaro Miura", "1989");
         AddProduct("Comics", "Monster Vol. 1", 14.99m, "Thriller", "Naoki Urasawa", "1994");
         AddProduct("Comics", "Batman: Year One", 19.99m, "Detective", "Frank Miller", "1987");
@@ -47,7 +47,7 @@ public class StoreService
         AddProduct("Comics", "V for Vendetta Vol. 1", 14.99m, "Dystopia", "Alan Moore", "1982");
         AddProduct("Comics", "Watchmen Vol. 1", 16.99m, "Superhero", "Alan Moore", "1986");
 
-        // --- ФИЛЬМЫ / СЕРИАЛЫ ---
+        // --- MOVIES ---
         AddProduct("Movies", "Inception", 12.99m, "Sci-Fi", "Christopher Nolan", "2010");
         AddProduct("Movies", "Requim for dream", 10.00m, "Drama", "Darren Arnofsky", "2001");
 
@@ -58,7 +58,7 @@ public class StoreService
         AddProduct("TVSeries", "Dark", 20.00m, "Sci-Fi", "Baran bo Odar and Jantje Friese", "2017");
 
 
-        // --- МУЗЫКА ---
+        // --- MUSIC ---
         AddProduct("Music", "Mutter", 25.00m, "Neue Deutsche Härte", "Rammstein", "2001");
     }
 
@@ -70,8 +70,8 @@ public class StoreService
             Name = name,
             Category = category,
             Price = price,
-            Description = $"Experience {name}, a premier title in the {genre} genre.", // Added description
-            Reviews = new List<Review>(), // CRITICAL: Initialize this so the list isn't null!
+            Description = $"Experience {name}, a premier title in the {genre} genre.", 
+            Reviews = new List<Review>(), 
             Attributes = new()
             {
                 new ProductAttr("Genre", genre),

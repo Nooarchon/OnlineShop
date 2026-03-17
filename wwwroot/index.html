@@ -5,25 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Store App — Alza Style</title>
     <style>
+        /* --- THEME SYSTEM (CSS Variables) --- */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --nav-bg: #ffffff;
+            --card-bg: #ffffff;
+            --sidebar-border: #dee2e6;
+            --input-bg: #ffffff;
+            --input-text: #212529;
+            --btn-secondary: #6c757d;
+            --card-border: #e9ecef;
+            --modal-overlay: rgba(0,0,0,0.5);
+            --modal-bg: #ffffff;
+            --accent-color: #007bff;
+            --category-btn-bg: #e9ecef;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121826; 
+            --text-color: #e6e9ef;
+            --nav-bg: #0f172a;
+            --card-bg: #1e293b;
+            --sidebar-border: #334155;
+            --input-bg: #1e293b;
+            --input-text: #ffffff;
+            --btn-secondary: #475569;
+            --card-border: #334155;
+            --modal-overlay: rgba(0,0,0,0.9);
+            --modal-bg: #1e293b;
+            --accent-color: #3b82f6; 
+            --category-btn-bg: #1e293b;
+        }
+
+        /* System theme */
+        @media (prefers-color-scheme: dark) {
+            [data-theme="system"] {
+                --bg-color: #1a1a1a;
+                --text-color: #f8f9fa;
+                --nav-bg: #222222;
+                --card-bg: #2a2a2a;
+                --sidebar-border: #333333;
+                --input-bg: #333333;
+                --input-text: #ffffff;
+                --btn-secondary: #444444;
+                --card-border: #333333;
+                --modal-overlay: rgba(0,0,0,0.85);
+                --modal-bg: #333333;
+                --accent-color: #007bff;
+                --category-btn-bg: #2a2a2a;
+            }
+        }
+
+        /* --- BASIC STYLES --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a1a;
-            color: white;
+            background: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
+            transition: background 0.3s, color 0.3s;
         }
 
         nav {
-            background: #222;
+            background: var(--nav-bg);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #007bff;
+            border-bottom: 2px solid var(--accent-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
             font-size: 1.5rem;
-            color: #007bff;
+            color: var(--accent-color);
+        }
+
+        .theme-select {
+            padding: 8px;
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--sidebar-border);
+            margin-right: 15px;
+            cursor: pointer;
         }
 
         .container {
@@ -35,7 +102,7 @@
 
         .sidebar {
             width: 280px;
-            border-right: 1px solid #333;
+            border-right: 1px solid var(--sidebar-border);
             padding-right: 20px;
         }
 
@@ -47,27 +114,21 @@
         }
 
         .category-btn {
-            background: #2a2a2a;
-            color: #ccc;
-            border: 1px solid #444;
+            background: var(--category-btn-bg);
+            color: var(--text-color);
+            border: 1px solid var(--sidebar-border);
             padding: 12px 15px;
             text-align: left;
             cursor: pointer;
             border-radius: 8px;
             transition: all 0.2s ease;
-            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-            .category-btn:hover {
-                background: #3a3a3a;
-                border-color: #666;
-            }
-
             .category-btn.active {
-                background: #007bff;
+                background: var(--accent-color);
                 color: white;
                 border-color: #0056b3;
                 box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
@@ -82,22 +143,22 @@
         }
 
         .game-card {
-            background: #2a2a2a;
+            background: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
             transition: transform 0.2s;
-            border: 1px solid #333;
+            border: 1px solid var(--card-border);
             cursor: pointer;
         }
 
             .game-card:hover {
                 transform: translateY(-5px);
-                border-color: #007bff;
+                border-color: var(--accent-color);
             }
 
         .btn {
-            background: #007bff;
+            background: var(--accent-color);
             color: white;
             border: none;
             padding: 10px 18px;
@@ -105,10 +166,6 @@
             border-radius: 6px;
             font-weight: bold;
         }
-
-            .btn:hover {
-                background: #0056b3;
-            }
 
         .star-rating {
             display: flex;
@@ -126,7 +183,6 @@
                 font-size: 30px;
                 color: #444;
                 cursor: pointer;
-                transition: color 0.2s;
             }
 
                 .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label {
@@ -134,7 +190,7 @@
                 }
 
         .modal {
-            background: rgba(0,0,0,0.85);
+            background: var(--modal-overlay);
             position: fixed;
             top: 0;
             left: 0;
@@ -147,10 +203,11 @@
         }
 
         .modal-content {
-            background: #333;
+            background: var(--modal-bg);
             padding: 30px;
             border-radius: 12px;
             width: 450px;
+            color: var(--text-color);
         }
 
         .scrollable-content {
@@ -164,34 +221,44 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid var(--sidebar-border);
         }
 
-        .remove-btn {
-            background: #dc3545;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin-left: 10px;
+        input[type="text"], input[type="email"], input[type="password"], textarea {
+            background: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--sidebar-border);
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
-<body>
+<body data-theme="system">
 
     <nav>
         <div class="logo"><strong>GAME STORE</strong></div>
         <div style="flex-grow: 1; max-width: 500px; margin: 0 20px;">
             <input type="text" id="search-bar" placeholder="Search for products..."
-                   style="width: 100%; padding: 10px; border-radius: 20px; border: none; background: #333; color: white;"
+                   style="width: 100%; border-radius: 20px;"
                    oninput="loadProducts()">
         </div>
-        <div id="auth-buttons">
-            <button class="btn" onclick="showModal('login')">Login</button>
-            <button class="btn" style="background:#444" onclick="showModal('signup')">Sign Up</button>
-        </div>
-        <div id="user-info" style="display:none">
-            <span id="display-username" style="margin-right: 15px; color: #007bff;"></span>
-            <button class="btn" onclick="showCart()" style="background: #28a745;">🛒 Cart (<span id="cart-count">0</span>)</button>
-            <button class="btn" onclick="logout()" style="background: #666; margin-left: 10px;">Logout</button>
+
+        <div style="display: flex; align-items: center;">
+            <select id="theme-select" class="theme-select" onchange="changeTheme(this.value)">
+                <option value="light">☀️ Light</option>
+                <option value="dark">🌙 Dark</option>
+                <option value="system">💻 System</option>
+            </select>
+
+            <div id="auth-buttons">
+                <button class="btn" onclick="showModal('login')">Login</button>
+                <button class="btn" style="background:var(--btn-secondary)" onclick="showModal('signup')">Sign Up</button>
+            </div>
+            <div id="user-info" style="display:none">
+                <span id="display-username" style="margin-right: 15px; color: var(--accent-color);"></span>
+                <button class="btn" onclick="showCart()" style="background: #28a745;">🛒 (<span id="cart-count">0</span>)</button>
+                <button class="btn" onclick="logout()" style="background: var(--btn-secondary); margin-left: 10px;">Logout</button>
+            </div>
         </div>
     </nav>
 
@@ -215,9 +282,9 @@
         <main class="catalog" id="product-list"></main>
     </div>
 
-    <div id="auth-modal" class="modal"><div class="modal-content"><h2 id="modal-title">Login</h2><input type="email" id="auth-email" placeholder="Email" style="width:95%; padding:10px; margin-bottom:10px;"><input type="password" id="auth-password" placeholder="Password" style="width:95%; padding:10px; margin-bottom:15px;"><button class="btn" style="width: 100%;" onclick="handleAuth()">Submit</button><button class="btn" style="background:#666; width: 100%; margin-top:10px;" onclick="hideModal('auth-modal')">Cancel</button></div></div>
-    <div id="detail-modal" class="modal"><div class="modal-content" style="width: 600px;"><div id="detail-body" class="scrollable-content"></div><button class="btn" style="background:#666; margin-top:20px; width: 100%;" onclick="hideModal('detail-modal')">Close</button></div></div>
-    <div id="cart-modal" class="modal"><div class="modal-content" style="width: 500px;"><h2>Your Cart</h2><div id="cart-items-list" class="scrollable-content"></div><h3 id="cart-total" style="text-align: right;">Total: $0.00</h3><button id="place-order-btn" class="btn" style="background: #28a745; width: 100%;" onclick="checkout()">Place Order</button><button class="btn" style="background: #666; width: 100%; margin-top:10px;" onclick="hideModal('cart-modal')">Close</button></div></div>
+    <div id="auth-modal" class="modal"><div class="modal-content"><h2 id="modal-title">Login</h2><input type="email" id="auth-email" placeholder="Email" style="width:95%; margin-bottom:10px;"><input type="password" id="auth-password" placeholder="Password" style="width:95%; margin-bottom:15px;"><button class="btn" style="width: 100%;" onclick="handleAuth()">Submit</button><button class="btn" style="background:var(--btn-secondary); width: 100%; margin-top:10px;" onclick="hideModal('auth-modal')">Cancel</button></div></div>
+    <div id="detail-modal" class="modal"><div class="modal-content" style="width: 600px;"><div id="detail-body" class="scrollable-content"></div><button class="btn" style="background:var(--btn-secondary); margin-top:20px; width: 100%;" onclick="hideModal('detail-modal')">Close</button></div></div>
+    <div id="cart-modal" class="modal"><div class="modal-content" style="width: 500px;"><h2>Your Cart</h2><div id="cart-items-list" class="scrollable-content"></div><h3 id="cart-total" style="text-align: right;">Total: $0.00</h3><button id="place-order-btn" class="btn" style="background: #28a745; width: 100%;" onclick="checkout()">Place Order</button><button class="btn" style="background:var(--btn-secondary); width: 100%; margin-top:10px;" onclick="hideModal('cart-modal')">Close</button></div></div>
 
     <script>
         let currentUser = null;
@@ -231,14 +298,25 @@
             "Music": ["Neue Deutsche Härte", "Rock", "Pop", "Metal"]
         };
 
+        // --- ТHEMES ---
+        function applyTheme(theme) {
+            const body = document.body;
+            body.setAttribute('data-theme', theme);
+        }
+
+function changeTheme(theme) {
+    localStorage.setItem('game-store-theme', theme);
+    applyTheme(theme);
+}
+
+        // --- LOADING PRODUCTS ---
         async function loadProducts() {
             const genres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(c => c.value);
             const searchQuery = document.getElementById('search-bar').value;
             const maxPrice = parseFloat(document.getElementById('price-filter').value);
 
             const params = new URLSearchParams();
-            const categoryParam = activeCategory;
-            params.append('category', categoryParam);
+            params.append('category', activeCategory);
             genres.forEach(g => params.append('genres', g));
 
             try {
@@ -247,7 +325,7 @@
                 if (searchQuery) data = data.filter(p => (p.Name || p.name).toLowerCase().includes(searchQuery.toLowerCase()));
                 data = data.filter(p => (p.Price !== undefined ? p.Price : p.price) <= maxPrice);
                 renderProducts(data);
-            } catch (e) { console.error("API Error:", e); }
+            } catch (e) { console.error("API Error:", e); renderProducts([]); }
         }
 
         function renderProducts(products) {
@@ -256,16 +334,17 @@
                     <div class="game-card" onclick="showProductDetail('${p.Id || p.id}')">
                         <div style="font-size:40px; margin-bottom:10px;">📦</div>
                         <h3>${p.Name || p.name}</h3>
-                        <p style="color:#007bff; font-weight:bold;">$${p.Price || p.price}</p>
+                        <p style="color:var(--accent-color); font-weight:bold;">$${p.Price || p.price}</p>
                         <button class="btn" onclick="event.stopPropagation(); addToCart('${p.Id || p.id}')">Add to Cart</button>
                     </div>`).join('');
         }
 
+        // --- DETAILS AND REVIEWS ---
         async function showProductDetail(id) {
             const res = await fetch(`/api/products/${id}`);
             const p = await res.json();
             let reviewForm = currentUser ? `
-                    <div style="background:#222; padding:15px; border-radius:8px; margin-top:20px;">
+                    <div style="background:var(--category-btn-bg); padding:15px; border-radius:8px; margin-top:20px;">
                         <h4>Leave a Review</h4>
                         <div class="star-rating">
                             <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
@@ -274,15 +353,15 @@
                             <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
                             <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
                         </div>
-                        <textarea id="review-comment" placeholder="Your thoughts..." style="width:95%; background:#333; color:white; border:none; padding:10px; border-radius:5px;"></textarea>
+                        <textarea id="review-comment" placeholder="Your thoughts..." style="width:95%; margin-top:10px;"></textarea>
                         <button class="btn" style="width:100%; margin-top:10px;" onclick="submitReview('${p.Id || p.id}')">Submit Review</button>
                     </div>` : '<p style="color:#888;">Login to leave a review</p>';
 
             document.getElementById('detail-body').innerHTML = `
-                    <h2 style="color:#007bff">${p.Name}</h2><p>${p.Description}</p><hr style="border-color:#444">
+                    <h2 style="color:var(--accent-color)">${p.Name}</h2><p>${p.Description}</p><hr style="border-color:var(--sidebar-border)">
                     <h4>User Reviews:</h4>
                     <div id="reviews-list">${p.Reviews && p.Reviews.length ? p.Reviews.map(r => `
-                        <div style="border-bottom:1px solid #444; padding:10px 0;">
+                        <div style="border-bottom:1px solid var(--sidebar-border); padding:10px 0;">
                             <span style="color:#ffcc00">${'★'.repeat(r.Rating)}${'☆'.repeat(5 - r.Rating)}</span>
                             <p style="margin:5px 0;">${r.Comment}</p><small style="color:#666">${r.UserEmail || r.User}</small>
                         </div>`).join('') : 'No reviews yet.'}
@@ -303,6 +382,7 @@
             if (res.ok) { alert("Review added!"); showProductDetail(productId); }
         }
 
+        // --- BUSKET ---
         async function addToCart(productId) {
             if (!currentUser) return showModal('login');
             await fetch('/api/cart/add', {
@@ -331,10 +411,10 @@
                 const price = i.Product.Price || i.Product.price;
                 total += price * i.Quantity;
                 return `<div class="cart-item">
-                        <span><strong>${i.Product.Name}</strong> x${i.Quantity}</span>
-                        <div><span>$${(price * i.Quantity).toFixed(2)}</span>
-                        <button class="btn remove-btn" onclick="removeFromCart('${i.Product.Id}')">✕</button></div>
-                    </div>`;
+                            <span><strong>${i.Product.Name}</strong> x${i.Quantity}</span>
+                            <div><span>$${(price * i.Quantity).toFixed(2)}</span>
+                            <button class="btn" style="background:#dc3545; padding:5px 10px; margin-left:10px" onclick="removeFromCart('${i.Product.Id || i.Product.id}')">✕</button></div>
+                        </div>`;
             }).join('');
             document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
             document.getElementById('cart-modal').style.display = 'flex';
@@ -347,50 +427,18 @@
             document.getElementById('cart-count').innerText = items.reduce((sum, i) => sum + i.Quantity, 0);
         }
 
-        // --- PLACE ORDER (CHECKOUT) LOGIC ---
         async function checkout() {
-            if (!currentUser) return;
-
-            // 1. Get cart items to send to order records
             const cartRes = await fetch(`/api/cart/${currentUser.email}`);
             const cartItems = await cartRes.json();
             if (cartItems.length === 0) return alert("Cart is empty!");
 
-            const totalText = document.getElementById('cart-total').innerText;
-            const totalValue = parseFloat(totalText.replace('Total: $', ''));
-
-            try {
-                // 2. Try to post to the orders API
-                const response = await fetch('/api/orders', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        UserEmail: currentUser.email,
-                        Items: cartItems,
-                        TotalAmount: totalValue,
-                        OrderDate: new Date().toISOString()
-                    })
-                });
-
-                if (response.ok || response.status === 404) {
-                    // 3. Clear the cart on the server regardless of order API status for this demo
-                    await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
-
-                    alert("🚀 Order Placed! Thank you for shopping with Game Store.");
-                    hideModal('cart-modal');
-                    updateCartCount();
-                } else {
-                    alert("There was an issue processing your order.");
-                }
-            } catch (error) {
-                // Fallback for demo: if API endpoint doesn't exist yet, still clear cart
-                await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
-                alert("Order Placed! (Demo Mode)");
-                hideModal('cart-modal');
-                updateCartCount();
-            }
+            await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
+            alert("🚀 Order Placed! (Demo)");
+            hideModal('cart-modal');
+            updateCartCount();
         }
 
+        // --- AUTHORIZATION AND NAVIGATION ---
         async function handleAuth() {
             const email = document.getElementById('auth-email').value;
             if (!email) return alert("Enter email");
@@ -416,7 +464,17 @@
         function showModal(id) { document.getElementById(id === 'login' || id === 'signup' ? 'auth-modal' : id).style.display = 'flex'; }
         function hideModal(id) { document.getElementById(id).style.display = 'none'; }
         function logout() { location.reload(); }
-        window.onload = () => { renderGenres(); loadProducts(); };
+
+        // --- INITIALIZATION ON LOAD ---
+        window.onload = () => {
+            // Restore theme
+            const savedTheme = localStorage.getItem('game-store-theme') || 'dark';
+            document.getElementById('theme-select').value = savedTheme;
+            changeTheme(savedTheme);
+
+            renderGenres();
+            loadProducts();
+        };
     </script>
 </body>
 </html>
