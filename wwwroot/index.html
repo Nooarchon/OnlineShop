@@ -1,0 +1,555 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Store App — Alza Style</title>
+    <style>
+        /* --- THEME SYSTEM (CSS Variables) --- */
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --nav-bg: #ffffff;
+            --card-bg: #ffffff;
+            --sidebar-border: #dee2e6;
+            --input-bg: #ffffff;
+            --input-text: #212529;
+            --btn-secondary: #6c757d;
+            --card-border: #e9ecef;
+            --modal-overlay: rgba(0,0,0,0.5);
+            --modal-bg: #ffffff;
+            --accent-color: #007bff;
+            --category-btn-bg: #e9ecef;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121826; 
+            --text-color: #e6e9ef;
+            --nav-bg: #0f172a;
+            --card-bg: #1e293b;
+            --sidebar-border: #334155;
+            --input-bg: #1e293b;
+            --input-text: #ffffff;
+            --btn-secondary: #475569;
+            --card-border: #334155;
+            --modal-overlay: rgba(0,0,0,0.9);
+            --modal-bg: #1e293b;
+            --accent-color: #3b82f6; 
+            --category-btn-bg: #1e293b;
+        }
+
+        /* System theme */
+        @media (prefers-color-scheme: dark) {
+            [data-theme="system"] {
+                --bg-color: #1a1a1a;
+                --text-color: #f8f9fa;
+                --nav-bg: #222222;
+                --card-bg: #2a2a2a;
+                --sidebar-border: #333333;
+                --input-bg: #333333;
+                --input-text: #ffffff;
+                --btn-secondary: #444444;
+                --card-border: #333333;
+                --modal-overlay: rgba(0,0,0,0.85);
+                --modal-bg: #333333;
+                --accent-color: #007bff;
+                --category-btn-bg: #2a2a2a;
+            }
+        }
+
+        /* --- BASIC STYLES --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        nav {
+            background: var(--nav-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .theme-select {
+            padding: 8px;
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--sidebar-border);
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 280px;
+            border-right: 1px solid var(--sidebar-border);
+            padding-right: 20px;
+        }
+
+        .category-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .category-btn {
+            background: var(--category-btn-bg);
+            color: var(--text-color);
+            border: 1px solid var(--sidebar-border);
+            padding: 12px 15px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .category-btn.active {
+                background: var(--accent-color);
+                color: white;
+                border-color: #0056b3;
+                box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            }
+
+        .catalog {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding-left: 30px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.2s;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+        }
+
+            .game-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--accent-color);
+            }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                font-size: 30px;
+                color: #444;
+                cursor: pointer;
+            }
+
+                .star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label {
+                    color: #ffcc00;
+                }
+
+        .modal {
+            background: var(--modal-overlay);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 450px;
+            color: var(--text-color);
+        }
+
+            .modal-content img {
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            }
+
+        .scrollable-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], textarea {
+            background: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--sidebar-border);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body data-theme="system">
+
+    <nav>
+        <div class="logo"><strong>GAME STORE</strong></div>
+        <div style="flex-grow: 1; max-width: 500px; margin: 0 20px;">
+            <input type="text" id="search-bar" placeholder="Search for products..."
+                   style="width: 100%; border-radius: 20px;"
+                   oninput="loadProducts()">
+        </div>
+
+        <div style="display: flex; align-items: center;">
+            <select id="theme-select" class="theme-select" onchange="changeTheme(this.value)">
+                <option value="light">☀️ Light</option>
+                <option value="dark">🌙 Dark</option>
+                <option value="system">💻 System</option>
+            </select>
+
+            <div id="auth-buttons">
+                <button class="btn" onclick="showAuthModal('login')">Login</button>
+                <button class="btn" style="background:var(--btn-secondary)" onclick="showAuthModal('signup')">Sign Up</button>
+            </div>
+            <div id="user-info" style="display:none">
+                <span id="display-username" style="margin-right: 15px; color: var(--accent-color);"></span>
+                <button class="btn" onclick="showCart()" style="background: #28a745;">🛒 (<span id="cart-count">0</span>)</button>
+                <button class="btn" onclick="logout()" style="background: var(--btn-secondary); margin-left: 10px;">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Categories</h3>
+            <div class="category-group" id="category-btns">
+                <button class="category-btn active" onclick="changeCategory('Games', this)">🎮 Games</button>
+                <button class="category-btn" onclick="changeCategory('Comics', this)">📚 Comics</button>
+                <button class="category-btn" onclick="changeCategory('Movies', this)">🎬 Movies</button>
+                <button class="category-btn" onclick="changeCategory('TVSeries', this)">📺 TV Series</button>
+                <button class="category-btn" onclick="changeCategory('Music', this)">🎵 Music</button>
+            </div>
+            <div class="filter-section">
+                <h4>Max Price: $<span id="price-val">500</span></h4>
+                <input type="range" id="price-filter" min="0" max="500" value="500" style="width: 100%;"
+                       oninput="document.getElementById('price-val').innerText = this.value; loadProducts();">
+            </div>
+            <div id="genre-filters" style="margin-top: 20px;"></div>
+        </aside>
+        <main class="catalog" id="product-list"></main>
+    </div>
+
+    <div id="auth-modal" class="modal"><div class="modal-content"><h2 id="modal-title">Login</h2><input type="email" id="auth-email" placeholder="Email" style="width:95%; margin-bottom:10px;"><input type="password" id="auth-password" placeholder="Password" style="width:95%; margin-bottom:15px;"><button class="btn" style="width: 100%;" onclick="handleAuth()">Submit</button><button class="btn" style="background:var(--btn-secondary); width: 100%; margin-top:10px;" onclick="hideModal('auth-modal')">Cancel</button></div></div>
+    <div id="detail-modal" class="modal"><div class="modal-content" style="width: 600px;"><div id="detail-body" class="scrollable-content"></div><button class="btn" style="background:var(--btn-secondary); margin-top:20px; width: 100%;" onclick="hideModal('detail-modal')">Close</button></div></div>
+    <div id="cart-modal" class="modal"><div class="modal-content" style="width: 500px;"><h2>Your Cart</h2><div id="cart-items-list" class="scrollable-content"></div><h3 id="cart-total" style="text-align: right;">Total: $0.00</h3><button id="place-order-btn" class="btn" style="background: #28a745; width: 100%;" onclick="checkout()">Place Order</button><button class="btn" style="background:var(--btn-secondary); width: 100%; margin-top:10px;" onclick="hideModal('cart-modal')">Close</button></div></div>
+
+    <script>
+        let currentUser = null;
+        let activeCategory = 'Games';
+
+        const categoryConfig = {
+            "Games": ["RPG", "Action", "Horror", "Stealth", "Adventure"],
+            "Comics": ["Dark Fantasy", "Thriller", "Superhero", "Detective"],
+            "Movies": ["Sci-Fi", "Action", "Drama", "Horror"],
+            "TVSeries": ["Drama", "Satire", "Thriller", "Fantasy", "Sci-Fi"],
+            "Music": ["Neue Deutsche Härte", "Rock", "Pop", "Metal"]
+        };
+
+        // --- ТHEMES ---
+        function applyTheme(theme) {
+            const body = document.body;
+            body.setAttribute('data-theme', theme);
+        }
+
+function changeTheme(theme) {
+    localStorage.setItem('game-store-theme', theme);
+    applyTheme(theme);
+}
+
+        // --- LOADING PRODUCTS ---
+        async function loadProducts() {
+            const genres = Array.from(document.querySelectorAll('.genre-checkbox:checked')).map(c => c.value);
+            const searchQuery = document.getElementById('search-bar').value;
+            const maxPrice = parseFloat(document.getElementById('price-filter').value);
+
+            const params = new URLSearchParams();
+            params.append('category', activeCategory);
+            genres.forEach(g => params.append('genres', g));
+
+            try {
+                const response = await fetch(`/api/games?${params.toString()}`);
+                let data = await response.json();
+                if (searchQuery) data = data.filter(p => (p.Name || p.name).toLowerCase().includes(searchQuery.toLowerCase()));
+                data = data.filter(p => (p.Price !== undefined ? p.Price : p.price) <= maxPrice);
+                renderProducts(data);
+            } catch (e) { console.error("API Error:", e); renderProducts([]); }
+        }
+
+        function renderProducts(products) {
+            const list = document.getElementById('product-list');
+            list.innerHTML = products.length === 0 ? `<p>No products found.</p>` : products.map(p => `
+            <div class="game-card" onclick="showProductDetail('${p.id || p.Id}')">
+               <img src="${p.imageUrl || p.ImageUrl}"
+                alt="${p.name || p.Name}"
+                onerror="this.src='https://via.placeholder.com/250?text=No+Image'"
+                style="width:100%; height:250px; object-fit:cover; border-radius:8px; margin-bottom:10px;">
+                <h3>${p.name || p.Name}</h3>
+                <p style="color:var(--accent-color); font-weight:bold;">$${p.price || p.Price}</p>
+                <button class="btn" onclick="event.stopPropagation(); addToCart('${p.id || p.Id}')">Add to Cart</button>
+            </div>`).join('');
+        }
+
+        // --- DETAILS AND REVIEWS ---
+        async function showProductDetail(id) {
+            const res = await fetch(`/api/products/${id}`);
+            const p = await res.json();
+
+            // Extract attributes nicely
+            const attrs = (p.Attributes || []).reduce((acc, a) => {
+                acc[a.Name] = a.Value;
+                return acc;
+            }, {});
+
+            let reviewForm = currentUser ? `
+        <div style="background:var(--category-btn-bg); padding:15px; border-radius:8px; margin-top:20px;">
+            <h4>Leave a Review</h4>
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+            </div>
+            <textarea id="review-comment" placeholder="Your thoughts..." style="width:95%; margin-top:10px;"></textarea>
+            <button class="btn" style="width:100%; margin-top:10px;" onclick="submitReview('${p.Id || p.id}')">Submit Review</button>
+        </div>
+    ` : '<p style="color:#888;">Login to leave a review</p>';
+
+            document.getElementById('detail-body').innerHTML = `
+        <!-- IMAGE -->
+        <img src="${p.ImageUrl || p.imageUrl}"
+             onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
+             style="width:100%; border-radius:10px; margin-bottom:15px; max-height:300px; object-fit:cover;">
+
+        <!-- TITLE -->
+        <h2 style="color:var(--accent-color)">${p.Name}</h2>
+
+        <!-- BASIC INFO -->
+        <p style="font-size:18px; font-weight:bold;">💰 $${p.Price}</p>
+
+        <!-- ATTRIBUTES -->
+        <div style="margin:15px 0; line-height:1.6;">
+            <p><strong>🎮 Genre:</strong> ${attrs["Genre"] || "N/A"}</p>
+            <p><strong>🏢 Creator:</strong> ${attrs["Creator"] || "N/A"}</p>
+            <p><strong>📅 Year:</strong> ${attrs["Year"] || "N/A"}</p>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <p>${p.Description}</p>
+
+        <hr style="border-color:var(--sidebar-border)">
+
+        <!-- REVIEWS -->
+        <h4>User Reviews:</h4>
+        <div id="reviews-list">
+            ${p.Reviews && p.Reviews.length ? p.Reviews.map(r => `
+                <div style="border-bottom:1px solid var(--sidebar-border); padding:10px 0;">
+                    <span style="color:#ffcc00">${'★'.repeat(r.Rating)}${'☆'.repeat(5 - r.Rating)}</span>
+                    <p style="margin:5px 0;">${r.Comment}</p>
+                    <small style="color:#666">${r.User}</small>
+                </div>
+            `).join('') : 'No reviews yet.'}
+        </div>
+
+        ${reviewForm}
+    `;
+
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        async function submitReview(productId) {
+            const comment = document.getElementById('review-comment').value;
+            const ratingEl = document.querySelector('input[name="rating"]:checked');
+            if (!ratingEl) return alert("Please select a star rating!");
+            const res = await fetch('/api/products/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ProductId: productId, UserEmail: currentUser.email, Comment: comment, Rating: parseInt(ratingEl.value) })
+            });
+            if (res.ok) { alert("Review added!"); showProductDetail(productId); }
+        }
+
+        // --- BUSKET ---
+        async function addToCart(productId) {
+            if (!currentUser) return showModal('login');
+            await fetch('/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
+            });
+            updateCartCount();
+        }
+
+        async function removeFromCart(productId) {
+            const res = await fetch(`/api/cart/remove`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
+            });
+            if (res.ok) { showCart(); updateCartCount(); }
+        }
+
+        async function showCart() {
+            const res = await fetch(`/api/cart/${currentUser.email}`);
+            const items = await res.json();
+            let total = 0;
+            const list = document.getElementById('cart-items-list');
+            list.innerHTML = items.length === 0 ? "<p>Empty cart</p>" : items.map(i => {
+                const price = i.Product.Price || i.Product.price;
+                total += price * i.Quantity;
+                return `<div class="cart-item">
+                            <span><strong>${i.Product.Name}</strong> x${i.Quantity}</span>
+                            <div><span>$${(price * i.Quantity).toFixed(2)}</span>
+                            <button class="btn" style="background:#dc3545; padding:5px 10px; margin-left:10px" onclick="removeFromCart('${i.Product.Id || i.Product.id}')">✕</button></div>
+                        </div>`;
+            }).join('');
+            document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        async function updateCartCount() {
+            if (!currentUser) return;
+            const res = await fetch(`/api/cart/${currentUser.email}`);
+            const items = await res.json();
+            document.getElementById('cart-count').innerText = items.reduce((sum, i) => sum + i.Quantity, 0);
+        }
+
+        async function checkout() {
+            const cartRes = await fetch(`/api/cart/${currentUser.email}`);
+            const cartItems = await cartRes.json();
+            if (cartItems.length === 0) return alert("Cart is empty!");
+
+            await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
+            alert("🚀 Order Placed! (Demo)");
+            hideModal('cart-modal');
+            updateCartCount();
+        }
+
+        // --- AUTHORIZATION AND NAVIGATION ---
+        async function handleAuth() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const isLogin = document.getElementById('modal-title').innerText === 'Login';
+
+            // Пути должны СТРОГО совпадать с [Route] в C#
+            const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ Email: email, Password: password })
+                });
+
+                const data = await res.json(); // Ожидаем JSON объект { message: "..." }
+
+                if (res.ok) {
+                    currentUser = { email: email };
+                    document.getElementById('display-username').innerText = email;
+                    document.getElementById('auth-buttons').style.display = 'none';
+                    document.getElementById('user-info').style.display = 'block';
+                    updateCartCount();
+                    hideModal('auth-modal');
+                    alert(isLogin ? "Welcome!" : data.message);
+                } else {
+                    // Выводим ошибку из message (например, "Error: Invalid email format")
+                    alert(data.message || "Authentication failed");
+                }
+            } catch (e) {
+                alert("Server is not responding. Check port and C# console.");
+            }
+        }
+
+        function showAuthModal(mode) {
+            document.getElementById('modal-title').innerText = mode === 'signup' ? 'Sign Up' : 'Login';
+            document.getElementById('auth-email').value = '';
+            document.getElementById('auth-password').value = '';
+            showModal('auth-modal');
+        }
+
+        function changeCategory(cat, el) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            activeCategory = cat;
+            renderGenres(); loadProducts();
+        }
+
+        function renderGenres() {
+            document.getElementById('genre-filters').innerHTML = (categoryConfig[activeCategory] || []).map(g => `
+                    <label style="display:block; margin:5px 0;"><input type="checkbox" class="genre-checkbox" value="${g}" onchange="loadProducts()"> ${g}</label>`).join('');
+        }
+
+        function showModal(id) { document.getElementById(id === 'login' || id === 'signup' ? 'auth-modal' : id).style.display = 'flex'; }
+        function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+        function logout() { location.reload(); }
+
+        // --- INITIALIZATION ON LOAD ---
+        window.onload = () => {
+            // Restore theme
+            const savedTheme = localStorage.getItem('game-store-theme') || 'dark';
+            document.getElementById('theme-select').value = savedTheme;
+            changeTheme(savedTheme);
+
+            renderGenres();
+            loadProducts();
+        };
+    </script>
+</body>
+</html>
