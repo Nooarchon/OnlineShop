@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using OnlineShop.Models;
-using OnlineShop.Services;
-using OnlineShop.Controllers;
-using System.Runtime.InteropServices;
-
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Services;
 using OnlineShop.Models;
+using System.ComponentModel.DataAnnotations; // Нужно для [Required] и [EmailAddress]
 
 namespace OnlineShop.Controllers
 {
@@ -26,11 +17,21 @@ namespace OnlineShop.Controllers
             _authService = authService;
         }
 
-        [HttpPost("signup")]
+        // Изменил путь на "register", чтобы соответствовать логике JS или оставил signup
+        [HttpPost("register")]
         public IActionResult SignUp([FromBody] UserAuthDto data)
         {
+            // ModelState проверит аннотации из UserAuthDto автоматически
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Invalid data format" });
+            }
+
             var result = _authService.Register(data.Email, data.Password);
-            if (result.StartsWith("Error")) return BadRequest(new { message = result });
+
+            if (result.StartsWith("Error"))
+                return BadRequest(new { message = result });
+
             return Ok(new { message = result });
         }
 
@@ -38,16 +39,21 @@ namespace OnlineShop.Controllers
         public IActionResult Login([FromBody] UserAuthDto data)
         {
             var user = _authService.Login(data.Email, data.Password);
-            if (user == null) return Unauthorized(new { message = "Invalid login or password" });
+            if (user == null)
+                return Unauthorized(new { message = "Error: Invalid login or password" });
 
-            // Now the user ID is a Guid, which is always unique
             return Ok(new { email = user.Email, id = user.Id });
         }
     }
 
     public class UserAuthDto
     {
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters")]
         public string Password { get; set; } = "";
     }
 }

@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\Users\\julia\\source\\repos\\OnlineShop\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -17,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\services\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:services\\cartservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +38,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\AuthController.cs*",
+              "RelativeToolTip": "Controllers\\AuthController.cs*",
+              "ViewState": "AgIAABIAAAAAAAAAAAAgwDoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T08:03:52.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T07:51:57.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -42,57 +76,57 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T08:25:19.923Z",
+              "WhenOpened": "2026-03-24T07:51:49.182Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "StoreService.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs",
               "RelativeDocumentMoniker": "Services\\StoreService.cs",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs",
               "RelativeToolTip": "Services\\StoreService.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T08:25:16.051Z",
+              "WhenOpened": "2026-03-24T07:51:48.444Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "CartService.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\CartService.cs",
               "RelativeDocumentMoniker": "Services\\CartService.cs",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\CartService.cs",
               "RelativeToolTip": "Services\\CartService.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T08:25:12.575Z",
+              "WhenOpened": "2026-03-24T07:51:47.161Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-24T07:51:46.192Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\AuthService.cs*",
-              "RelativeToolTip": "Services\\AuthService.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T08:25:03.845Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "index.html",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
               "RelativeDocumentMoniker": "wwwroot\\index.html",
-              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
-              "RelativeToolTip": "wwwroot\\index.html",
-              "ViewState": "AgIAAL0BAAAAAAAAAAAAANIBAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html*",
+              "RelativeToolTip": "wwwroot\\index.html*",
+              "ViewState": "AgIAALABAAAAAAAAAAAAwNkBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2026-03-04T16:58:49.436Z",
               "EditorCaption": ""

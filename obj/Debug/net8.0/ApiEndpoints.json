@@ -18,7 +18,7 @@
   {
     "ContainingType": "OnlineShop.Controllers.AuthController",
     "Method": "SignUp",
-    "RelativePath": "api/auth/signup",
+    "RelativePath": "api/auth/register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
