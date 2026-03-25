@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\julia\\source\\repos\\OnlineShop\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:wwwroot\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|solutionrelative:services\\storeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{31919440-488F-47C5-AFF5-2E176288EDF8}|OnlineShop.csproj|c:\\users\\julia\\source\\repos\\onlineshop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,11 +38,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
+              "Title": "GameController.cs",
+              "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\GameController.cs",
+              "RelativeDocumentMoniker": "Controllers\\GameController.cs",
+              "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\GameController.cs",
+              "RelativeToolTip": "Controllers\\GameController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAYwCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T11:20:27.332Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Product.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\Product.cs",
               "RelativeDocumentMoniker": "Models\\Product.cs",
@@ -50,7 +67,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "CartController.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Controllers\\CartController.cs",
               "RelativeDocumentMoniker": "Controllers\\CartController.cs",
@@ -62,7 +79,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "CartItem.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Models\\CartItem.cs",
               "RelativeDocumentMoniker": "Models\\CartItem.cs",
@@ -74,7 +91,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -82,32 +99,34 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-24T07:51:49.182Z"
+              "WhenOpened": "2026-03-24T07:51:49.182Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "StoreService.cs",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs",
               "RelativeDocumentMoniker": "Services\\StoreService.cs",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\Services\\StoreService.cs",
               "RelativeToolTip": "Services\\StoreService.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAAwCoAAABsAAAAAAAAAA==",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAYwIkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-24T07:51:48.444Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "index.html",
               "DocumentMoniker": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
               "RelativeDocumentMoniker": "wwwroot\\index.html",
               "ToolTip": "C:\\Users\\julia\\source\\repos\\OnlineShop\\wwwroot\\index.html",
               "RelativeToolTip": "wwwroot\\index.html",
-              "ViewState": "AgIAALcAAAAAAAAAAAAAwNEAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAAF4CAAAAAAAAAAAAwIMCAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-03-04T16:58:49.436Z"
+              "WhenOpened": "2026-03-04T16:58:49.436Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -49,8 +49,29 @@ namespace OnlineShop.Controllers
         [HttpPost("products/review")]
         public IActionResult AddReview([FromBody] ReviewDto data)
         {
+            if (data == null || string.IsNullOrEmpty(data.ProductId)) return BadRequest("Invalid data");
+
+            // Ensure the service actually finds the product and adds the review
             var success = _storeService.AddReview(data.ProductId, data.UserEmail, data.Comment, data.Rating);
-            return success ? Ok(new { message = "Review added" }) : BadRequest();
+
+            if (success) return Ok(new { message = "Review added" });
+            return BadRequest(new { message = "Failed to add review. Check if ProductId is correct." });
+        }
+        // 4. PUT: api/products/review (Updates an existing review)
+        [HttpPut("products/review")]
+        public IActionResult UpdateReview([FromBody] ReviewDto data)
+        {
+            // StoreService.UpdateReview handles finding the review by email
+            var success = _storeService.UpdateReview(data.ProductId, data.UserEmail, data.Comment, data.Rating);
+            return success ? Ok(new { message = "Review updated" }) : BadRequest();
+        }
+
+        // 5. DELETE: api/products/review (Removes a review)
+        [HttpDelete("products/review")]
+        public IActionResult DeleteReview([FromQuery] string productId, [FromQuery] string email)
+        {
+            var success = _storeService.RemoveReview(productId, email);
+            return success ? Ok(new { message = "Review deleted" }) : NotFound();
         }
     }
 

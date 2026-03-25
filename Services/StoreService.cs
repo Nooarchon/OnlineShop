@@ -22,7 +22,7 @@ public class StoreService
         AddProduct("Games", "Disco Elysium", 59.99m, "RPG", "ZA/UM", "2019", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/632470/header.jpg");
         AddProduct("Games", "Dragon Age: Origins", 29.99m, "RPG", "BioWare", "2009", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/17450/header.jpg");
         AddProduct("Games", "Manhunt", 49.99m, "Stealth", "Rockstar Games", "2003", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/12130/header.jpg");
-        AddProduct("Games", "Little Nightmares", 29.99m, "Horror/Quest", "Tarsier Studios", "2017", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/424840/header.jpg");
+        AddProduct("Games", "Little Nightmares", 29.99m, "Horror", "Tarsier Studios", "2017", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/424840/header.jpg");
         AddProduct("Games", "Wolf Among Us", 29.99m, "Adventure", "Telltale Games", "2013", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/250320/header.jpg");
         AddProduct("Games", "The Walking Dead", 19.99m, "Adventure", "Telltale Games", "2012", "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/207610/header.jpg");
         AddProduct("Games", "Dispatch", 29.99m, "Interactive Movie", "Adhoc Studios", "2025", "https://tse1.mm.bing.net/th/id/OIP.LPlaagXuCcIGoefY4dt3xgHaEK?rs=1&pid=ImgDetMain&o=7&rm=3");
@@ -103,6 +103,42 @@ public class StoreService
             Rating = Math.Clamp(rating, 1, 5),
             Date = DateTime.Now
         });
+        return true;
+    }
+
+    // Удаление отзыва
+    public bool RemoveReview(string productId, string email)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (product == null) return false;
+
+        var review = product.Reviews.FirstOrDefault(r => r.User == email);
+        if (review == null) return false;
+
+        product.Reviews.Remove(review);
+        return true;
+    }
+
+    // Обновление отзыва (если отзыв уже есть — исправляем, если нет — создаем)
+    public bool UpdateReview(string productId, string email, string comment, int rating)
+    {
+        var product = _products.FirstOrDefault(p => p.Id == productId);
+        if (product == null) return false;
+
+        var existingReview = product.Reviews.FirstOrDefault(r => r.User == email);
+
+        if (existingReview != null)
+        {
+            // Исправляем старый
+            existingReview.Comment = comment;
+            existingReview.Rating = Math.Clamp(rating, 1, 5);
+            existingReview.Date = DateTime.Now;
+        }
+        else
+        {
+            // Если вдруг вызвали Update для несуществующего — просто добавляем
+            AddReview(productId, email, comment, rating);
+        }
         return true;
     }
 

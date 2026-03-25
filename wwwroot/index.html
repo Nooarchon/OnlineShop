@@ -295,23 +295,22 @@
         let activeCategory = 'Games';
 
         const categoryConfig = {
-            "Games": ["RPG", "Action", "Horror", "Stealth", "Adventure"],
+            "Games": ["RPG", "Action", "Horror", "Stealth", "Adventure", "Interactive Movie"],
             "Comics": ["Dark Fantasy", "Thriller", "Superhero", "Detective"],
             "Movies": ["Sci-Fi", "Action", "Drama", "Horror"],
-            "TVSeries": ["Drama", "Satire", "Thriller", "Fantasy", "Sci-Fi"],
+            "TVSeries": ["Crime", "Drama", "Satire", "Thriller", "Fantasy", "Sci-Fi"],
             "Music": ["Neue Deutsche Härte", "Rock", "Pop", "Metal"]
         };
 
-        // --- ТHEMES ---
+        // --- THEMES ---
         function applyTheme(theme) {
-            const body = document.body;
-            body.setAttribute('data-theme', theme);
+            document.body.setAttribute('data-theme', theme);
         }
 
-function changeTheme(theme) {
-    localStorage.setItem('game-store-theme', theme);
-    applyTheme(theme);
-}
+        function changeTheme(theme) {
+            localStorage.setItem('game-store-theme', theme);
+            applyTheme(theme);
+        }
 
         // --- LOADING PRODUCTS ---
         async function loadProducts() {
@@ -326,24 +325,32 @@ function changeTheme(theme) {
             try {
                 const response = await fetch(`/api/games?${params.toString()}`);
                 let data = await response.json();
-                if (searchQuery) data = data.filter(p => (p.Name || p.name).toLowerCase().includes(searchQuery.toLowerCase()));
-                data = data.filter(p => (p.Price !== undefined ? p.Price : p.price) <= maxPrice);
+
+                // Handle Search & Price Filter client-side for faster UI response
+                if (searchQuery) {
+                    data = data.filter(p => (p.name || p.Name).toLowerCase().includes(searchQuery.toLowerCase()));
+                }
+                data = data.filter(p => (p.price !== undefined ? p.price : p.Price) <= maxPrice);
+
                 renderProducts(data);
-            } catch (e) { console.error("API Error:", e); renderProducts([]); }
+            } catch (e) {
+                console.error("API Error:", e);
+                renderProducts([]);
+            }
         }
 
         function renderProducts(products) {
             const list = document.getElementById('product-list');
             list.innerHTML = products.length === 0 ? `<p>No products found.</p>` : products.map(p => `
-            <div class="game-card" onclick="showProductDetail('${p.id || p.Id}')">
-               <img src="${p.imageUrl || p.ImageUrl}"
-                alt="${p.name || p.Name}"
-                onerror="this.src='https://via.placeholder.com/250?text=No+Image'"
-                style="width:100%; height:250px; object-fit:cover; border-radius:8px; margin-bottom:10px;">
-                <h3>${p.name || p.Name}</h3>
-                <p style="color:var(--accent-color); font-weight:bold;">$${p.price || p.Price}</p>
-                <button class="btn" onclick="event.stopPropagation(); addToCart('${p.id || p.Id}')">Add to Cart</button>
-            </div>`).join('');
+    <div class="game-card" onclick="showProductDetail('${p.id || p.Id}')">
+        <img src="${p.imageUrl || p.ImageUrl}" 
+             alt="${p.name || p.Name}" 
+             onerror="this.src='https://via.placeholder.com/250?text=No+Image'"
+             style="width:100%; height:250px; object-fit:cover; border-radius:8px; margin-bottom:10px;">
+        <h3>${p.name || p.Name}</h3>
+        <p style="color:var(--accent-color); font-weight:bold;">$${p.price || p.Price}</p>
+        <button class="btn" onclick="event.stopPropagation(); addToCart('${p.id || p.Id}')">Add to Cart</button>
+    </div>`).join('');
         }
 
         // --- DETAILS AND REVIEWS ---
@@ -351,144 +358,138 @@ function changeTheme(theme) {
             const res = await fetch(`/api/products/${id}`);
             const p = await res.json();
 
-            // Extract attributes nicely
-            const attrs = (p.Attributes || []).reduce((acc, a) => {
-                acc[a.Name] = a.Value;
+            // Map attributes for easier access
+            const attrs = (p.attributes || p.Attributes || []).reduce((acc, a) => {
+                acc[a.name || a.Name] = a.value || a.Value;
                 return acc;
             }, {});
 
+            // Render Reviews list
+            const reviews = p.reviews || p.Reviews || [];
+            let reviewsHtml = reviews.length ? reviews.map(r => {
+                const userEmail = r.user || r.User;
+                const isOwner = currentUser && userEmail === currentUser.email;
+                const rating = r.rating || r.Rating;
+                const comment = r.comment || r.Comment;
+
+                return `
+        <div style="border-bottom:1px solid var(--sidebar-border); padding:10px 0;">
+            <span style="color:#ffcc00">${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</span>
+            <p style="margin:5px 0;">${comment}</p>
+            <small style="color:#666">${userEmail}</small>
+            ${isOwner ? `
+                <div style="margin-top:5px;">
+                    <button onclick="prepareEditReview('${p.id || p.Id}', \`${comment.replace(/'/g, "\\'")}\`, ${rating})" 
+                            style="background:none; border:none; color:var(--accent-color); cursor:pointer; font-size:12px; margin-right:10px; padding:0;">Edit</button>
+                    <button onclick="deleteReview('${p.id || p.Id}')" 
+                            style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:12px; padding:0;">Delete</button>
+                </div>
+            ` : ''}
+        </div>`;
+            }).join('') : 'No reviews yet.';
+
+            // Prepare Review Form
             let reviewForm = currentUser ? `
-        <div style="background:var(--category-btn-bg); padding:15px; border-radius:8px; margin-top:20px;">
-            <h4>Leave a Review</h4>
-            <div class="star-rating">
-                <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
-                <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
-                <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
-                <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
-                <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
-            </div>
-            <textarea id="review-comment" placeholder="Your thoughts..." style="width:95%; margin-top:10px;"></textarea>
-            <button class="btn" style="width:100%; margin-top:10px;" onclick="submitReview('${p.Id || p.id}')">Submit Review</button>
+    <div id="review-form-container" style="background:var(--category-btn-bg); padding:15px; border-radius:8px; margin-top:20px;">
+        <h4 id="review-form-title">Leave a Review</h4>
+        <div class="star-rating">
+            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
         </div>
-    ` : '<p style="color:#888;">Login to leave a review</p>';
+        <textarea id="review-comment" placeholder="Your thoughts..." style="width:95%; margin-top:10px;"></textarea>
+        <button class="btn" id="submit-review-btn" style="width:100%; margin-top:10px;" onclick="submitReview('${p.id || p.Id}')">Submit Review</button>
+        <button class="btn" id="cancel-edit-btn" style="width:100%; margin-top:5px; background:var(--btn-secondary); display:none;" onclick="resetReviewForm('${p.id || p.Id}')">Cancel Edit</button>
+    </div>` : '<p style="color:#888; text-align:center; margin-top:20px;">Login to leave a review</p>';
 
             document.getElementById('detail-body').innerHTML = `
-        <!-- IMAGE -->
-        <img src="${p.ImageUrl || p.imageUrl}"
-             onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'"
-             style="width:100%; border-radius:10px; margin-bottom:15px; max-height:300px; object-fit:cover;">
-
-        <!-- TITLE -->
-        <h2 style="color:var(--accent-color)">${p.Name}</h2>
-
-        <!-- BASIC INFO -->
-        <p style="font-size:18px; font-weight:bold;">💰 $${p.Price}</p>
-
-        <!-- ATTRIBUTES -->
-        <div style="margin:15px 0; line-height:1.6;">
-            <p><strong>🎮 Genre:</strong> ${attrs["Genre"] || "N/A"}</p>
-            <p><strong>🏢 Creator:</strong> ${attrs["Creator"] || "N/A"}</p>
-            <p><strong>📅 Year:</strong> ${attrs["Year"] || "N/A"}</p>
+        <img src="${p.imageUrl || p.ImageUrl}" style="width:100%; border-radius:10px; margin-bottom:15px; max-height:300px; object-fit:cover;">
+        <h2 style="color:var(--accent-color); margin-top:0;">${p.name || p.Name}</h2>
+        <p style="font-size:18px; font-weight:bold;">💰 $${p.price || p.Price}</p>
+        <div style="margin:15px 0; line-height:1.6; background:var(--category-btn-bg); padding:10px; border-radius:8px;">
+            <p style="margin:5px 0;"><strong>🎮 Genre:</strong> ${attrs["Genre"] || "N/A"}</p>
+            <p style="margin:5px 0;"><strong>🏢 Creator:</strong> ${attrs["Creator"] || "N/A"}</p>
+            <p style="margin:5px 0;"><strong>📅 Year:</strong> ${attrs["Year"] || "N/A"}</p>
         </div>
-
-        <!-- DESCRIPTION -->
-        <p>${p.Description}</p>
-
-        <hr style="border-color:var(--sidebar-border)">
-
-        <!-- REVIEWS -->
+        <p>${p.description || p.Description}</p>
+        <hr style="border:none; border-top:1px solid var(--sidebar-border); margin:20px 0;">
         <h4>User Reviews:</h4>
-        <div id="reviews-list">
-            ${p.Reviews && p.Reviews.length ? p.Reviews.map(r => `
-                <div style="border-bottom:1px solid var(--sidebar-border); padding:10px 0;">
-                    <span style="color:#ffcc00">${'★'.repeat(r.Rating)}${'☆'.repeat(5 - r.Rating)}</span>
-                    <p style="margin:5px 0;">${r.Comment}</p>
-                    <small style="color:#666">${r.User}</small>
-                </div>
-            `).join('') : 'No reviews yet.'}
-        </div>
-
+        <div id="reviews-list">${reviewsHtml}</div>
         ${reviewForm}
     `;
+            showModal('detail-modal');
+        }
 
-            document.getElementById('detail-modal').style.display = 'flex';
+        // --- REVIEW LOGIC ---
+        function prepareEditReview(productId, comment, rating) {
+            document.getElementById('review-form-title').innerText = "Edit Your Review";
+            document.getElementById('review-comment').value = comment;
+            const starInput = document.getElementById(`star${rating}`);
+            if (starInput) starInput.checked = true;
+            document.getElementById('submit-review-btn').innerText = "Update Review";
+            document.getElementById('cancel-edit-btn').style.display = "block";
+            document.getElementById('review-form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetReviewForm(productId) {
+            document.getElementById('review-form-title').innerText = "Leave a Review";
+            document.getElementById('review-comment').value = "";
+            const checkedStar = document.querySelector('input[name="rating"]:checked');
+            if (checkedStar) checkedStar.checked = false;
+            document.getElementById('submit-review-btn').innerText = "Submit Review";
+            document.getElementById('cancel-edit-btn').style.display = "none";
         }
 
         async function submitReview(productId) {
             const comment = document.getElementById('review-comment').value;
-            const ratingEl = document.querySelector('input[name="rating"]:checked');
-            if (!ratingEl) return alert("Please select a star rating!");
-            const res = await fetch('/api/products/review', {
-                method: 'POST',
+            const ratingElement = document.querySelector('input[name="rating"]:checked');
+
+            if (!comment || !ratingElement) {
+                alert("Please provide a rating and a comment.");
+                return;
+            }
+
+            const isUpdate = document.getElementById('submit-review-btn').innerText === "Update Review";
+            const method = isUpdate ? 'PUT' : 'POST';
+
+            const response = await fetch('/api/products/review', {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ProductId: productId, UserEmail: currentUser.email, Comment: comment, Rating: parseInt(ratingEl.value) })
+                body: JSON.stringify({
+                    productId: productId,
+                    userEmail: currentUser.email,
+                    comment: comment,
+                    rating: parseInt(ratingElement.value)
+                })
             });
-            if (res.ok) { alert("Review added!"); showProductDetail(productId); }
+
+            if (response.ok) {
+                alert(isUpdate ? "Review updated!" : "Review added!");
+                showProductDetail(productId);
+            } else {
+                alert("Failed to save review.");
+            }
         }
 
-        // --- BUSKET ---
-        async function addToCart(productId) {
-            if (!currentUser) return showModal('login');
-            await fetch('/api/cart/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
-            });
-            updateCartCount();
+        async function deleteReview(productId) {
+            if (!confirm("Are you sure you want to delete your review?")) return;
+            const url = `/api/products/review?productId=${productId}&email=${encodeURIComponent(currentUser.email)}`;
+            const res = await fetch(url, { method: 'DELETE' });
+            if (res.ok) {
+                alert("Review deleted!");
+                showProductDetail(productId);
+            } else {
+                alert("Failed to delete review.");
+            }
         }
 
-        async function removeFromCart(productId) {
-            const res = await fetch(`/api/cart/remove`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
-            });
-            if (res.ok) { showCart(); updateCartCount(); }
-        }
-
-        async function showCart() {
-            const res = await fetch(`/api/cart/${currentUser.email}`);
-            const items = await res.json();
-            let total = 0;
-            const list = document.getElementById('cart-items-list');
-            list.innerHTML = items.length === 0 ? "<p>Empty cart</p>" : items.map(i => {
-                const price = i.Product.Price || i.Product.price;
-                total += price * i.Quantity;
-                return `<div class="cart-item">
-                            <span><strong>${i.Product.Name}</strong> x${i.Quantity}</span>
-                            <div><span>$${(price * i.Quantity).toFixed(2)}</span>
-                            <button class="btn" style="background:#dc3545; padding:5px 10px; margin-left:10px" onclick="removeFromCart('${i.Product.Id || i.Product.id}')">✕</button></div>
-                        </div>`;
-            }).join('');
-            document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
-            document.getElementById('cart-modal').style.display = 'flex';
-        }
-
-        async function updateCartCount() {
-            if (!currentUser) return;
-            const res = await fetch(`/api/cart/${currentUser.email}`);
-            const items = await res.json();
-            document.getElementById('cart-count').innerText = items.reduce((sum, i) => sum + i.Quantity, 0);
-        }
-
-        async function checkout() {
-            const cartRes = await fetch(`/api/cart/${currentUser.email}`);
-            const cartItems = await cartRes.json();
-            if (cartItems.length === 0) return alert("Cart is empty!");
-
-            await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
-            alert("🚀 Order Placed! (Demo)");
-            hideModal('cart-modal');
-            updateCartCount();
-        }
-
-        // --- AUTHORIZATION AND NAVIGATION ---
+        // --- AUTH, CART & UI ---
         async function handleAuth() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const isLogin = document.getElementById('modal-title').innerText === 'Login';
-
-            // Пути должны СТРОГО совпадать с [Route] в C#
             const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
 
             try {
@@ -497,9 +498,7 @@ function changeTheme(theme) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ Email: email, Password: password })
                 });
-
-                const data = await res.json(); // Ожидаем JSON объект { message: "..." }
-
+                const data = await res.json();
                 if (res.ok) {
                     currentUser = { email: email };
                     document.getElementById('display-username').innerText = email;
@@ -507,14 +506,11 @@ function changeTheme(theme) {
                     document.getElementById('user-info').style.display = 'block';
                     updateCartCount();
                     hideModal('auth-modal');
-                    alert(isLogin ? "Welcome!" : data.message);
+                    alert(isLogin ? "Welcome back!" : "Account created!");
                 } else {
-                    // Выводим ошибку из message (например, "Error: Invalid email format")
                     alert(data.message || "Authentication failed");
                 }
-            } catch (e) {
-                alert("Server is not responding. Check port and C# console.");
-            }
+            } catch (e) { alert("Server is not responding."); }
         }
 
         function showAuthModal(mode) {
@@ -524,29 +520,137 @@ function changeTheme(theme) {
             showModal('auth-modal');
         }
 
+        function showModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'flex';
+        }
+
+        function hideModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.style.display = 'none';
+        }
+
         function changeCategory(cat, el) {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             el.classList.add('active');
             activeCategory = cat;
-            renderGenres(); loadProducts();
+            renderGenres();
+            loadProducts();
         }
 
         function renderGenres() {
             document.getElementById('genre-filters').innerHTML = (categoryConfig[activeCategory] || []).map(g => `
-                    <label style="display:block; margin:5px 0;"><input type="checkbox" class="genre-checkbox" value="${g}" onchange="loadProducts()"> ${g}</label>`).join('');
+        <label style="display:block; margin:5px 0;"><input type="checkbox" class="genre-checkbox" value="${g}" onchange="loadProducts()"> ${g}</label>`).join('');
         }
 
-        function showModal(id) { document.getElementById(id === 'login' || id === 'signup' ? 'auth-modal' : id).style.display = 'flex'; }
-        function hideModal(id) { document.getElementById(id).style.display = 'none'; }
-        function logout() { location.reload(); }
+        // --- CART & CHECKOUT LOGIC ---
+        async function showCart() {
+            if (!currentUser) return showAuthModal('login');
 
-        // --- INITIALIZATION ON LOAD ---
+            try {
+                const res = await fetch(`/api/cart/${currentUser.email}`);
+                const items = await res.json();
+                let total = 0;
+                const list = document.getElementById('cart-items-list');
+
+                list.innerHTML = items.length === 0 ? "<p>Your cart is empty.</p>" : items.map(i => {
+                    // Handle both PascalCase (C#) and camelCase (JSON)
+                    const product = i.product || i.Product;
+                    const price = product.price || product.Price || 0;
+                    const quantity = i.quantity || i.Quantity || 0;
+                    const productId = product.id || product.Id;
+                    const productName = product.name || product.Name;
+
+                    total += price * quantity;
+
+                    return `
+                <div class="cart-item">
+                    <span><strong>${productName}</strong> x${quantity}</span>
+                    <div>
+                        <span>$${(price * quantity).toFixed(2)}</span>
+                        <button class="btn" style="background:#dc3545; padding:5px 10px; margin-left:10px" 
+                                onclick="removeFromCart('${productId}')">✕</button>
+                    </div>
+                </div>`;
+                }).join('');
+
+                document.getElementById('cart-total').innerText = `Total: $${total.toFixed(2)}`;
+                showModal('cart-modal');
+            } catch (e) {
+                console.error("Error loading cart:", e);
+                alert("Could not load cart.");
+            }
+        }
+
+        async function removeFromCart(productId) {
+            if (!currentUser) return;
+
+            const res = await fetch(`/api/cart/remove`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
+            });
+
+            if (res.ok) {
+                showCart(); // Refresh the list
+                updateCartCount(); // Refresh the navbar bubble
+            }
+        }
+
+        async function checkout() {
+            if (!currentUser) return;
+
+            const cartRes = await fetch(`/api/cart/${currentUser.email}`);
+            const cartItems = await cartRes.json();
+            if (cartItems.length === 0) return alert("Cart is empty!");
+
+            const res = await fetch(`/api/cart/clear/${currentUser.email}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert("🚀 Order Placed! Thank you for your purchase.");
+                hideModal('cart-modal');
+                updateCartCount();
+            } else {
+                alert("Checkout failed.");
+            }
+        }
+
+        async function addToCart(productId) {
+            if (!currentUser) return showAuthModal('login');
+            await fetch('/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ UserEmail: currentUser.email, ProductId: productId })
+            });
+            updateCartCount();
+            alert("Added to cart!");
+        }
+
+        async function updateCartCount() {
+            if (!currentUser) return;
+            try {
+                const res = await fetch(`/api/cart/${currentUser.email}`);
+                const items = await res.json();
+
+                // Sum up the quantities of all items
+                const totalItems = items.reduce((sum, i) => {
+                    const qty = i.quantity || i.Quantity || 0;
+                    return sum + qty;
+                }, 0);
+
+                document.getElementById('cart-count').innerText = totalItems;
+            } catch (e) {
+                console.error("Cart count error:", e);
+            }
+        }
+
+        function logout() {
+            location.reload();
+        }
+
         window.onload = () => {
-            // Restore theme
-            const savedTheme = localStorage.getItem('game-store-theme') || 'dark';
+            const savedTheme = localStorage.getItem('game-store-theme') || 'system';
             document.getElementById('theme-select').value = savedTheme;
-            changeTheme(savedTheme);
-
+            applyTheme(savedTheme);
             renderGenres();
             loadProducts();
         };

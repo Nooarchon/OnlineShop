@@ -157,5 +157,42 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnlineShop.Controllers.GameController",
+    "Method": "UpdateReview",
+    "RelativePath": "api/products/review",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "OnlineShop.Controllers.ReviewDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OnlineShop.Controllers.GameController",
+    "Method": "DeleteReview",
+    "RelativePath": "api/products/review",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "productId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
